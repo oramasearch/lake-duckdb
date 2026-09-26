@@ -1,0 +1,4 @@
+/lake-duckdb
+*.duckdb
+*.duckdb.wal
+*.duckdb.tmp/
