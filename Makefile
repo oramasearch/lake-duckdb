@@ -11,7 +11,7 @@ test: ## Unit, HTTP and lockdown tests (no network, temp directories only).
 vet:
 	go vet ./...
 
-docker-build: ## linux/amd64 image, on an amd64 builder (the cluster BuildKit). Never push a new name before it exists as a private repo (README).
+docker-build: ## linux/amd64 image, on an amd64 builder (for example a BuildKit on amd64).
 	docker buildx build --platform linux/amd64 -t $(IMG) .
 
 run: build ## Serve ./local.duckdb on :8080 with a throwaway token.

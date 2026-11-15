@@ -4,7 +4,7 @@
 DuckDB database behind a small HTTP API with a bearer token, the same API as
 [lake-sqlite](https://github.com/oramasearch/lake-sqlite). A customer creates a DuckDB service on
 lake's Services page; the Orama operator runs one `lake-duckdb` pod per service with its own volume,
-and lake hands the customer its address and token (liquid-bridge decision 47, amended; lake#195).
+and lake hands the customer its address and token.
 
 ```sh
 make test            # go test ./... (cgo: a C/C++ toolchain is needed)
@@ -35,7 +35,6 @@ limits and errors: [`docs/api.md`](docs/api.md).
 DuckDB is a trademark of the DuckDB Foundation. This service is described as "powered by DuckDB";
 it is not, and is never called, "DuckDB Cloud" or an official DuckDB product.
 
-**Private.** This repository and the `oramasearch/lake-duckdb` Docker Hub repository are private,
-like every Orama service (the umbrella `CLAUDE.md` rule). Pin: liquid-bridge `modules/lake-duckdb`.
+The image is `oramasearch/lake-duckdb` on Docker Hub.
 The operator side (StatefulSet, Service, credential) is orama-operator
 `internal/controller/lake_service_duckdb.go`.
