@@ -1,36 +1,123 @@
 # Contributing to lake-duckdb
 
-lake-duckdb, powered by DuckDB, is one Go binary (`cmd/lake-duckdb`) serving one DuckDB database
-over HTTP (`internal/server`). Call it "powered by DuckDB", never "DuckDB Cloud". Its API contract
-is the `duckdb` row of lake's `docs/control-plane/services.md` (the same API as lake-sqlite); what
-is built is [`docs/api.md`](docs/api.md). Change both together.
+Thank you for helping. This document says how to build and test lake-duckdb, how a change gets in,
+and the one thing every commit needs: a sign-off.
+
+## Before you start
+
+- For a bug, open an issue with what you did, what you expected and what happened, and the
+  version or commit.
+- For a larger change (a new feature, a new dependency, a change to an interface), open an issue
+  first so the approach can be agreed before you write it.
+- **Security issues are never reported in a public issue.** See [SECURITY.md](SECURITY.md): write
+  to **security@orama.com**.
 
 ## Build and test
 
+You need Go (the version in `go.mod`) and a C/C++ toolchain, because the DuckDB driver uses cgo
+and links DuckDB's prebuilt static library.
+
 ```sh
-go build ./... && go vet ./... && go test ./...
+make test              # go test ./...
+go build ./...
+docker build -t lake-duckdb:local .
 ```
 
-cgo is on, so a C/C++ toolchain is needed.
+## Making a change
 
-## Rules for changes
+1. Fork the repository and branch from `dev`. `main` is the last release; it moves only when a
+   release is cut.
+2. Keep one change per pull request, with the tests that prove it. A change in behavior updates
+   the documentation it touches in the same pull request.
+3. Write commit messages in the [Conventional Commits](https://www.conventionalcommits.org/) form,
+   for example `fix(api): reject an empty name`.
+4. Sign off every commit (next section).
+5. Open the pull request against `dev`. Start its description with what changes, why, and how.
 
-- **Language and driver:** Go with `github.com/duckdb/duckdb-go/v2` (MIT; the successor of
-  `github.com/marcboeker/go-duckdb/v2`), which links DuckDB (MIT) statically through cgo. The
-  runtime is `distroless/cc-debian12` (glibc) with libstdc++/libgcc linked statically. The DuckDB
-  version is the driver's (`v2.1MMPP.x` bundles DuckDB `1.M.P`).
-- **The lockdown is the security boundary.** `internal/server/engine.go` `lockdown()` runs before
-  the service answers, and `lock_configuration=true` must stay last. Every escape has a test in
-  `internal/server/lockdown_test.go`; a new DuckDB version or a new setting means re-running them,
-  and a new way out (a new file-reading function, a new extension mechanism) means a new case.
-  Never add an extension, `allowed_directories`, or anything that re-opens file or network access.
-- **Never log** SQL, parameters, bodies or the token.
-- Documentation changes in the same pull request as the code.
-- Branch from `dev` and open the pull request against `dev`; `main` holds the last release.
-- Images are built for `linux/amd64` on an amd64 builder (cgo cross-compiles poorly) and pushed with
-  an immutable `<semver>` tag; the operator's default image (`lakeServices.duckdbImage` in its chart)
-  moves to the new tag after the push.
+A maintainer reviews it. Pull requests are merged with a merge commit, so every commit you sign
+stays in the history.
 
-## Security
+## Sign your commits (Developer Certificate of Origin)
 
-Report a vulnerability privately, as [`SECURITY.md`](SECURITY.md) describes, never in a public issue.
+lake-duckdb takes contributions under the [Developer Certificate of Origin](https://developercertificate.org/)
+(DCO). There is no contributor license agreement to sign. Your contribution is licensed under the
+project's license, the MIT License (see [LICENSE](LICENSE)).
+
+By adding a `Signed-off-by` line to a commit, you certify the DCO below for that commit. Git adds
+the line for you with `-s`:
+
+```sh
+git commit -s -m "fix(api): reject an empty name"
+```
+
+which records:
+
+```
+Signed-off-by: Your Name <you@example.com>
+```
+
+The name and address are the ones in your `git config user.name` and `user.email`. Use your real
+name; anonymous contributions cannot be accepted. To sign commits you have already made:
+
+```sh
+git commit --amend -s --no-edit        # the last commit
+git rebase --signoff dev               # every commit on your branch
+```
+
+A pull request with an unsigned commit is not merged until it is signed.
+
+```
+Developer Certificate of Origin
+Version 1.1
+
+Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
+
+Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.
+
+
+Developer's Certificate of Origin 1.1
+
+By making a contribution to this project, I certify that:
+
+(a) The contribution was created in whole or in part by me and I
+    have the right to submit it under the open source license
+    indicated in the file; or
+
+(b) The contribution is based upon previous work that, to the best
+    of my knowledge, is covered under an appropriate open source
+    license and I have the right under that license to submit that
+    work with modifications, whether created in whole or in part
+    by me, under the same open source license (unless I am
+    permitted to submit under a different license), as indicated
+    in the file; or
+
+(c) The contribution was provided directly to me by some other
+    person who certified (a), (b) or (c) and I have not modified
+    it.
+
+(d) I understand and agree that this project and the contribution
+    are public and that a record of the contribution (including all
+    personal information I submit with it, including my sign-off) is
+    maintained indefinitely and may be redistributed consistent with
+    this project or the open source license(s) involved.
+```
+
+## License headers
+
+Every source file starts with the line `SPDX-License-Identifier: MIT`, in that file's comment
+syntax, for example `// SPDX-License-Identifier: MIT`. Add it to a new file yourself, or run:
+
+```sh
+python3 tools/spdx-headers.py           # adds the line where it is missing
+python3 tools/spdx-headers.py --check   # lists files without it
+```
+
+Code copied from another project keeps its own license header and is listed in
+[THIRD_PARTY_LICENSES](THIRD_PARTY_LICENSES). Say so in the pull request, with where it came from
+and its license; it must be compatible with the MIT License.
+
+## Code of conduct
+
+Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md). Report unacceptable
+behavior to **conduct@orama.com**.
