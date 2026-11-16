@@ -47,6 +47,10 @@ RUN mkdir /out && cd build \
  && cp src/libduckdb_static.a third_party/*/libduckdb_*.a extension/libduckdb_generated_extension_loader.a \
        extension/*/lib*_extension.a /out/
 
+# STATIC_LINK sets the default thread stack to 8 MiB (-z stack-size), which musl reads from the
+# binary. Its own default is 128 KiB, and DuckDB's parser, binder and planner recurse once per level
+# of nesting: a query of about 100 nested parentheses overflowed that and killed the process. Go's
+# cgo calls run on threads made with that default. TestDeepQueriesDoNotOverflowTheStack covers it.
 FROM toolchain AS build
 WORKDIR /workspace
 COPY --from=duckdb /out/ /duckdb/
@@ -59,7 +63,7 @@ COPY docs/releases/ docs/releases/
 ENV CGO_ENABLED=1 \
     GOFLAGS=-tags=duckdb_use_static_lib \
     CGO_LDFLAGS="-L/duckdb -Wl,--start-group -lduckdb_static -lduckdb_generated_extension_loader -lautocomplete_extension -lcore_functions_extension -licu_extension -ljson_extension -lparquet_extension -lduckdb_fastpforlib -lduckdb_fmt -lduckdb_fsst -lduckdb_hyperloglog -lduckdb_jemalloc -lduckdb_mbedtls -lduckdb_miniz -lduckdb_pg_query -lduckdb_re2 -lduckdb_skiplistlib -lduckdb_utf8proc -lduckdb_yyjson -lduckdb_zstd -Wl,--end-group -lc++ -lc++abi -lunwind -lm" \
-    STATIC_LINK='-linkmode external -extldflags "-static -fuse-ld=lld -rtlib=compiler-rt -unwindlib=libunwind"'
+    STATIC_LINK='-linkmode external -extldflags "-static -fuse-ld=lld -rtlib=compiler-rt -unwindlib=libunwind -Wl,-z,stack-size=8388608"'
 RUN go test -count=1 -ldflags="${STATIC_LINK}" ./...
 RUN go build -trimpath -ldflags="-s -w ${STATIC_LINK}" -o /out/lake-duckdb ./cmd/lake-duckdb \
  && /out/lake-duckdb --version \

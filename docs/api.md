@@ -260,7 +260,9 @@ code: the [`Dockerfile`](../Dockerfile) builds DuckDB v1.5.5 from its source rel
 against its SHA-256) with clang on Alpine, against musl and LLVM's libc++, libc++abi, libunwind and
 compiler-rt, then links the service fully statically through duckdb-go-bindings'
 `duckdb_use_static_lib` tag. The image holds the binary, `/etc/passwd` and `/etc/group` for user
-`65532`, and an empty `/data` owned by it. The full test suite runs inside the build, against that
+`65532`, and an empty `/data` owned by it. The binary is linked with an 8 MiB default thread
+stack (`-z stack-size`): musl's own default is 128 KiB, which a query of about 100 nested
+parentheses overflowed, killing the process. The full test suite runs inside the build, against that
 static DuckDB, so a build that does not pass it produces no image. The build stage is
 `golang:1.27.4-alpine`, pinned by digest. `go.mod` keeps `go 1.25.0` as the oldest Go that builds
 the source; release images are built with a Go release that still gets security fixes.

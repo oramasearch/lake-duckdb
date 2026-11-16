@@ -504,3 +504,42 @@ func TestResponseCapCountsEscapes(t *testing.T) {
 		t.Fatalf("answer of %d bytes, truncated %v", len(raw), body["truncated"])
 	}
 }
+
+// TestDeepQueriesDoNotOverflowTheStack: DuckDB's parser, binder and planner recurse once per level
+// of nesting. On musl a thread's default stack is 128 KiB, which a query of about 100 nested
+// parentheses used to overflow, killing the process; the Dockerfile links the binary with an 8 MiB
+// default thread stack. The image build runs this test with the same link flags, so each query
+// here must answer, with its rows or with DuckDB's own error (200 nested subqueries pass
+// max_expression_depth, which the binder refuses only after recursing that deep), and the service
+// must still answer after it.
+func TestDeepQueriesDoNotOverflowTheStack(t *testing.T) {
+	h := newHarness(t, Config{})
+	cases := []struct {
+		name string
+		sql  string
+	}{
+		{"300 nested parentheses",
+			"SELECT " + strings.Repeat("(", 300) + "1" + strings.Repeat(")", 300) + " AS v"},
+		{"200 nested subqueries",
+			"SELECT " + strings.Repeat("(SELECT ", 200) + "1" + strings.Repeat(")", 200) + " AS v"},
+		{"300 nested CASE expressions",
+			"SELECT " + strings.Repeat("CASE WHEN true THEN ", 300) + "1" + strings.Repeat(" END", 300) + " AS v"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			status, body := h.query(tc.sql)
+			switch {
+			case status == http.StatusOK:
+				if got := canonical(t, body["rows"]); got != `[[1]]` {
+					t.Fatalf("rows %s", got)
+				}
+			case status == http.StatusBadRequest && errorCode(body) == "sql_error":
+			default:
+				t.Fatalf("status %d: %v", status, body)
+			}
+			if status, body := h.query("SELECT 1 AS v"); status != http.StatusOK {
+				t.Fatalf("after the deep query: %d %v", status, body)
+			}
+		})
+	}
+}
