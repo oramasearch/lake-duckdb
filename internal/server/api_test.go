@@ -490,3 +490,17 @@ func TestDatabaseIsTheFileAtPath(t *testing.T) {
 		t.Fatalf("after reopening: %s", got)
 	}
 }
+
+// TestResponseCapCountsEscapes: a control character is six bytes in JSON, so a string of them
+// takes six times its length from the cap.
+func TestResponseCapCountsEscapes(t *testing.T) {
+	if got := jsonStringSize("a\x01\"<é "); got != 1+6+2+6+2+6 {
+		t.Fatalf("jsonStringSize: %d", got)
+	}
+	h := newHarness(t, Config{MaxResponseBytes: 64 << 10})
+	_, body := h.query("SELECT repeat(chr(1), 1000) AS v FROM range(100)")
+	raw, _ := json.Marshal(body)
+	if len(raw) > 64<<10 || body["truncated"] != true {
+		t.Fatalf("answer of %d bytes, truncated %v", len(raw), body["truncated"])
+	}
+}

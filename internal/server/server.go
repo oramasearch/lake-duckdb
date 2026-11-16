@@ -67,6 +67,7 @@ type Config struct {
 // Server serves the API over one database.
 type Server struct {
 	db        *sql.DB
+	split     *splitter
 	slots     chan struct{}
 	tokenHash [sha256.Size]byte
 	maxRows   int
@@ -120,15 +121,22 @@ func Open(ctx context.Context, cfg Config) (*Server, error) {
 	db.SetMaxOpenConns(concurrency + 1)
 	db.SetMaxIdleConns(concurrency + 1)
 	s.db = db
-	if err := s.check(ctx); err != nil {
+	if s.split, err = newSplitter(); err != nil {
 		_ = db.Close()
+		return nil, err
+	}
+	if err := s.check(ctx); err != nil {
+		_ = s.Close()
 		return nil, err
 	}
 	return s, nil
 }
 
 // Close closes the database, which checkpoints its WAL into the file.
-func (s *Server) Close() error { return s.db.Close() }
+func (s *Server) Close() error {
+	s.split.close()
+	return s.db.Close()
+}
 
 func (s *Server) check(ctx context.Context) error {
 	var one int64
@@ -297,12 +305,31 @@ func (st statement) args() ([]interface{}, *apiError) {
 	return args, nil
 }
 
+// statementArgs checks one statement before anything runs (statement.args, then that sql holds
+// exactly one statement; see splitter) and returns its bound parameters.
+func (s *Server) statementArgs(st statement) ([]interface{}, *apiError) {
+	args, apiErr := st.args()
+	if apiErr != nil {
+		return nil, apiErr
+	}
+	switch n, parseErr := s.split.count(st.SQL); {
+	case n == 0 && parseErr == "":
+		return nil, &apiError{http.StatusBadRequest, "invalid_request", "sql holds no statement"}
+	case n == 0:
+		return nil, &apiError{http.StatusBadRequest, "sql_error", parseErr}
+	case n > 1:
+		return nil, &apiError{http.StatusBadRequest, "invalid_request", fmt.Sprintf(
+			"sql holds %d statements; send one statement per sql (use /v1/batch for several)", n)}
+	}
+	return args, nil
+}
+
 func (s *Server) handleOne(ctx context.Context, body []byte, how mode) (interface{}, *apiError) {
 	var st statement
 	if err := decode(body, &st); err != nil {
 		return nil, err
 	}
-	args, apiErr := st.args()
+	args, apiErr := s.statementArgs(st)
 	if apiErr != nil {
 		return nil, apiErr
 	}
@@ -339,7 +366,7 @@ func (s *Server) handleBatch(ctx context.Context, body []byte) (interface{}, *ap
 	}
 	args := make([][]interface{}, len(req.Statements))
 	for i, st := range req.Statements {
-		a, apiErr := st.args()
+		a, apiErr := s.statementArgs(st)
 		if apiErr != nil {
 			apiErr.message = fmt.Sprintf("statements[%d]: %s", i, apiErr.message)
 			return nil, apiErr

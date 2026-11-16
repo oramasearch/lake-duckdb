@@ -89,8 +89,8 @@ talks to nothing else: it has no outbound network access at all.
   database, and the service is down while its pod restarts.
 - **No bring-your-own files**: with external access off, data arrives through `INSERT`, not
   `read_parquet` or `COPY FROM` a file or URL.
-- **Several statements in one `sql`** all run, each committing on its own, and only the last one
-  answers. Send one statement per `sql`.
+- **One statement per `sql`**: several are refused; send them through `/v1/batch`. `COPY`,
+  `EXPORT DATABASE` and `DETACH` are refused too.
 - **The statement guard is a list of names** for DuckDB v1.5.5 (the tests classify every PRAGMA and
   table function), until a DuckDB with the upstream fix replaces it. It also refuses `query(...)`
   calls and a refused name inside a string literal.

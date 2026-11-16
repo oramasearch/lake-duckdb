@@ -103,7 +103,32 @@ nor on its reviewed allow list, so a DuckDB upgrade that adds one is classified 
 
 As a second line, the service points file descriptor 1 at `/dev/null` at startup and writes its own
 request log to a duplicate of the original stdout ([`cmd/lake-duckdb/stdout.go`](../cmd/lake-duckdb/stdout.go)):
-whatever DuckDB itself prints never reaches the pod's log.
+whatever DuckDB prints to stdout never reaches the pod's log. Standard error is left as it is, so the
+Go runtime can still report a crash; the only DuckDB output found there (the profiler's query trees)
+comes from the profiling pragmas, which the guard refuses.
+
+### One statement, and the statement types the service never runs
+
+**Each `sql` holds exactly one statement** (a trailing `;` or comment is fine). The service counts
+the statements with DuckDB's own parser before anything runs
+([`internal/server/split.go`](../internal/server/split.go), on a separate in-memory database where
+nothing is executed) and refuses more than one with `400 invalid_request`. The driver would run
+every statement but the last while preparing, past every check made on the prepared statement: a
+hidden `COMMIT; SELECT 1` used to commit a batch half-way. Send several statements through
+`/v1/batch`.
+
+The one statement is then prepared (which binds it; it does not run) and refused with
+**`403 forbidden`** when its type is `COPY` (to or from anywhere), `EXPORT DATABASE` or `DETACH`.
+`enable_external_access` leaves DuckDB its own files (the database, its WAL and the spill
+directory), so `COPY ... TO 'main.duckdb'` could overwrite the database with a CSV, after which the
+pod never starts again; `DETACH` of the main database would leave every later request without its
+tables while `/healthz` still answers.
+
+Every request also gets **a fresh connection**, discarded when the request ends, so nothing a client
+sets on a connection outlives its request: `USE`, `SET search_path`, temporary tables, prepared
+statements and variables are gone at the next request. What is the database's, not one
+connection's, does last: tables and other objects in the database, and an attached `:memory:`
+database until the pod restarts.
 
 ## API
 
@@ -155,8 +180,8 @@ back as `{"$base64": ...}` (its 16 bytes), a time as RFC 3339, and a `DECIMAL` s
 ### `POST /v1/query`
 
 `{"sql", "params"}` answers `200` `{"columns": [...], "rows": [[...]], "truncated": true}`. At most
-**10,000 rows** and **32 MiB of values** (the bytes of strings and blobs plus a few for every other
-value); when there were more, the answer stops there and carries `"truncated": true` (the key is
+**10,000 rows** and **32 MiB of values** (strings counted as JSON writes them, escapes included,
+blobs as their base64, plus a margin for every other value); when there were more, the answer stops there and carries `"truncated": true` (the key is
 absent otherwise). A single value larger than 32 MiB answers no rows and `"truncated": true`. A statement that returns no rows still answers `columns` and an empty `rows`.
 DuckDB answers a statement without data with one column: an `INSERT`, `UPDATE` or `DELETE` sent to
 `/v1/query` answers `{"columns": ["Count"], "rows": [[n]]}`.
@@ -182,9 +207,9 @@ one transaction).
 
 ### Transactions
 
-**No transaction outlives its request.** After every request the connection is rolled back before it
-returns to the pool, so a `BEGIN` sent alone to `/v1/exec` is undone when that request ends. Use
-`/v1/batch` for statements that must commit together.
+**No transaction outlives its request.** After every request the connection is rolled back and
+closed, so a `BEGIN` sent alone to `/v1/exec` is undone when that request ends. Use `/v1/batch` for
+statements that must commit together.
 
 ### `GET /healthz`
 
@@ -201,10 +226,10 @@ Every error is `{"error": {"code": "...", "message": "..."}}`:
 | Status | `code` | When |
 |---|---|---|
 | 400 | `sql_error` | DuckDB refused the statement (syntax, missing table, constraint, a locked setting, ...); the message is DuckDB's |
-| 400 | `invalid_request` | the body is not the expected JSON, `sql` is empty or only a comment, `statements` is empty, or a batch holds a transaction statement |
+| 400 | `invalid_request` | the body is not the expected JSON, `sql` is empty or only a comment, `sql` holds more than one statement, `statements` is empty, or a batch holds a transaction statement |
 | 400 | `invalid_params` | a parameter cannot be bound (see the table above) |
 | 401 | `unauthorized` | no or a wrong bearer token |
-| 403 | `forbidden` | the statement reached for a file, the network or an extension (the lockdown), or names a function the lockdown cannot lock (above) |
+| 403 | `forbidden` | the statement reached for a file, the network or an extension (the lockdown), names a function the lockdown cannot lock, or is a `COPY`, `EXPORT DATABASE` or `DETACH` (above) |
 | 404 | `not_found` | an unknown route (with a valid token) |
 | 405 | `method_not_allowed` | a route called with the wrong method |
 | 409 | `conflict` | a transaction conflict with a concurrent writer; retry |
@@ -265,7 +290,8 @@ directory) cover the token (missing, wrong, prefix, suffix, other schemes, and `
 one), every value type, request errors and their codes, the 16 MiB cap, exec results, a primary-key
 violation, batch commit, rollback on a SQL error and on a bad parameter, `RETURNING` in a batch,
 that no transaction outlives its request, the 10,000-row cap on `/v1/query` and in a batch, the
-32 MiB response cap (and that a batch shares it), the
+32 MiB response cap (counting JSON escapes, and shared by a batch), one statement per `sql`, the
+refused statement types, that no connection state outlives its request, the
 statement timeout (and that the service answers afterwards), `/healthz` on an open and a closed
 database, refusing to start without a token or a writable path, data surviving a reopen, the memory
 and thread limits, the lockdown and the statement guard (above), and that the request log never
@@ -288,9 +314,9 @@ carries the token, the SQL or a parameter.
   `COPY FROM` a file or URL; data arrives through `INSERT` (parameters, or `VALUES`). Bulk loading
   from object storage would need a deliberate, allow-listed design (`allowed_directories`), not a
   relaxed lockdown.
-- A `sql` holding several statements separated by `;` runs all of them, each committing on its own
-  (inside a batch, inside the batch's transaction), and only the last one answers. Send one
-  statement per `sql`.
+- **One statement per `sql`**: a `sql` holding several is refused (above); lake-sqlite runs them
+  all. Use `/v1/batch`.
+- **No `COPY`, `EXPORT DATABASE` or `DETACH`**, and no `query(...)` calls (above).
 - The memory guard is DuckDB's `memory_limit` plus the Go heap limit; a query that needs more and
   cannot spill answers `503 out_of_memory` rather than the pod being killed, but DuckDB allocations
   outside its buffer manager are not counted, which is what the unassigned quarter of the container

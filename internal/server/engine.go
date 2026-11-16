@@ -108,9 +108,10 @@ const (
 	modeAuto              // rows when the statement returns data, a count otherwise (batch)
 )
 
-// withConn runs fn on one pooled connection, under an API slot, and rolls back any transaction a
-// client statement left open before the connection goes back to the pool: no transaction outlives
-// its request.
+// withConn runs fn on a fresh connection, under an API slot, and then rolls back any transaction a
+// client statement left open and discards the connection: no transaction, and nothing else a client
+// set on its connection (USE, search_path, temporary tables, prepared statements, variables),
+// outlives its request. DuckDB connections are cheap to open; the next request gets a new one.
 func (s *Server) withConn(ctx context.Context, fn func(conn *duckdb.Conn) *apiError) *apiError {
 	select {
 	case s.slots <- struct{}{}:
@@ -134,9 +135,10 @@ func (s *Server) withConn(ctx context.Context, fn func(conn *duckdb.Conn) *apiEr
 		defer cancel()
 		// Fails with "no transaction is active" in the usual case, which is the point.
 		_, _ = conn.ExecContext(cleanup, "ROLLBACK", nil)
-		return nil
+		// ErrBadConn makes database/sql close this connection instead of pooling it.
+		return driver.ErrBadConn
 	})
-	if err != nil && apiErr == nil {
+	if err != nil && !errors.Is(err, driver.ErrBadConn) && apiErr == nil {
 		return &apiError{http.StatusInternalServerError, "internal", "cannot use a database connection"}
 	}
 	return apiErr
@@ -159,11 +161,14 @@ func (s *Server) run(ctx context.Context, conn *duckdb.Conn, query string, args 
 	for i, arg := range args {
 		named[i] = driver.NamedValue{Ordinal: i + 1, Value: arg}
 	}
+	kind, err := stmt.StatementType()
+	if err != nil {
+		return result{}, sqlError(ctx, err)
+	}
+	if refused, ok := refusedStatements[kind]; ok {
+		return result{}, &apiError{http.StatusForbidden, "forbidden", refused}
+	}
 	if how == modeAuto {
-		kind, err := stmt.StatementType()
-		if err != nil {
-			return result{}, sqlError(ctx, err)
-		}
 		if kind == duckdb.STATEMENT_TYPE_TRANSACTION {
 			return result{}, &apiError{http.StatusBadRequest, "invalid_request",
 				"a batch is already one transaction; BEGIN, COMMIT and ROLLBACK are not allowed in it"}
@@ -193,6 +198,19 @@ func (s *Server) run(ctx context.Context, conn *duckdb.Conn, query string, args 
 		return result{}, sqlError(ctx, err)
 	}
 	return result{query: &answer}, nil
+}
+
+// refusedStatements are the statement types the service never runs, checked after the one
+// statement in a sql is prepared and before it executes (preparing binds, it does not run).
+// enable_external_access leaves DuckDB its own files: the database, its WAL and the temporary
+// directory. COPY ... TO and EXPORT DATABASE could therefore overwrite main.duckdb or its WAL, and a
+// pod whose database file is a CSV never starts again. DETACH of the main database leaves every
+// later request without its tables while /healthz still answers. Data leaves through the API;
+// COPY ... FROM has nothing to read with external access off, so it goes too.
+var refusedStatements = map[duckdb.StmtType]string{
+	duckdb.STATEMENT_TYPE_COPY:   "COPY is not allowed: data enters and leaves through the API",
+	duckdb.STATEMENT_TYPE_EXPORT: "EXPORT DATABASE is not allowed: data leaves through the API",
+	duckdb.STATEMENT_TYPE_DETACH: "DETACH is not allowed: the service's database stays attached",
 }
 
 // countsOnly: DuckDB answers a statement that returns no data with a single column, "Count"
