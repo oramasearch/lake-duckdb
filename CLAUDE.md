@@ -6,8 +6,11 @@
   [`docs/api.md`](docs/api.md). Change both together.
 - **Language and driver:** Go with `github.com/duckdb/duckdb-go/v2` (MIT; the successor of
   `github.com/marcboeker/go-duckdb/v2`), which links DuckDB (MIT) statically through cgo. CGO is
-  **on**; the runtime is `distroless/cc-debian12` (glibc) with libstdc++/libgcc linked statically.
-  The DuckDB version is the driver's (`v2.1MMPP.x` bundles DuckDB `1.M.P`).
+  **on**. The image is `FROM scratch` with one static binary: the `Dockerfile` builds DuckDB from
+  source against musl and LLVM libc++ (no GPL or LGPL code; never add a base image or a GCC runtime)
+  and links it with the `duckdb_use_static_lib` tag; a local `go build` uses the prebuilt libraries.
+  The DuckDB version is the driver's (`v2.1MMPP.x` bundles DuckDB `1.M.P`); the Dockerfile's
+  `DUCKDB_VERSION` moves with it.
 - **The lockdown is the security boundary.** `internal/server/engine.go` `lockdown()` runs before
   the service answers, and `lock_configuration=true` must stay last. Every escape has a test in
   `internal/server/lockdown_test.go`; a new DuckDB version or a new setting means re-running them,

@@ -14,7 +14,7 @@ the whole API as built, and says where DuckDB makes it differ from lake-sqlite.
 | Image | `oramasearch/lake-duckdb:<tag>` (Docker Hub), built from [`Dockerfile`](../Dockerfile) for `linux/amd64` |
 | Driver | [`github.com/duckdb/duckdb-go/v2`](https://github.com/duckdb/duckdb-go) v2.10505.0, **MIT** — the DuckDB Foundation's continuation of `github.com/marcboeker/go-duckdb/v2` (which stopped at v2.4.3, DuckDB 1.4.1). cgo; DuckDB is linked statically |
 | Engine | DuckDB v1.5.5, from `github.com/duckdb/duckdb-go-bindings` v0.10505.0, **MIT** |
-| Runtime | `gcr.io/distroless/cc-debian12:nonroot` (glibc, no shell), user `65532:65532`, one binary with libstdc++ and libgcc linked in |
+| Runtime | `FROM scratch`, user `65532:65532`: one static binary (musl, LLVM libc++, DuckDB built from source), no shell, no libc package |
 
 ## Configuration
 
@@ -65,9 +65,9 @@ What stays allowed: everything inside the one database (tables, views, macros, s
 `CHECKPOINT`), `ATTACH ':memory:'` (an in-memory database, bounded by the memory limit and gone on
 restart), session settings that are not configuration options (`SET search_path`), and the
 extensions loaded in the binary (`core_functions`, `parquet`, `json`, `icu`, `autocomplete`), which
-read nothing from outside while external access is off. The prebuilt DuckDB library also links
-`tpch` and `tpcds`; they are not loaded, and `LOAD tpch`, `LOAD tpcds`, `CALL dbgen(...)` and
-`CALL dsdgen(...)` fail (tested).
+read nothing from outside while external access is off. The image's DuckDB is built without
+`tpch` and `tpcds`; the prebuilt library a local `go build` links carries them unloaded. Either way
+`LOAD tpch`, `LOAD tpcds`, `CALL dbgen(...)` and `CALL dsdgen(...)` fail (tested).
 
 ### Statements the lockdown cannot lock
 
@@ -255,10 +255,18 @@ Every error is `{"error": {"code": "...", "message": "..."}}`:
 ## Build
 
 The image is built from the repository root for `linux/amd64`, on an amd64 builder: the build uses
-cgo, so build it natively, not under emulation. The builder stage is `golang:1.27.4-bookworm` and
-the runtime `gcr.io/distroless/cc-debian12:nonroot`, both pinned by digest; the two share Debian
-12's glibc, so they move together. `go.mod` keeps `go 1.25.0` as the oldest Go that builds the
-source; release images are built with a Go release that still gets security fixes.
+cgo, so build it natively, not under emulation. It is **`FROM scratch`** and holds no GPL or LGPL
+code: the [`Dockerfile`](../Dockerfile) builds DuckDB v1.5.5 from its source release (checked
+against its SHA-256) with clang on Alpine, against musl and LLVM's libc++, libc++abi, libunwind and
+compiler-rt, then links the service fully statically through duckdb-go-bindings'
+`duckdb_use_static_lib` tag. The image holds the binary, `/etc/passwd` and `/etc/group` for user
+`65532`, and an empty `/data` owned by it. The full test suite runs inside the build, against that
+static DuckDB, so a build that does not pass it produces no image. The build stage is
+`golang:1.27.4-alpine`, pinned by digest. `go.mod` keeps `go 1.25.0` as the oldest Go that builds
+the source; release images are built with a Go release that still gets security fixes.
+
+A local `go build` (no tag) links the bindings' prebuilt DuckDB libraries instead, which is fast and
+needs only a C/C++ toolchain; the image's build is the one that ships.
 
 ```sh
 docker buildx build --platform linux/amd64 -t oramasearch/lake-duckdb:<tag> .
