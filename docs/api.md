@@ -317,6 +317,11 @@ carries the token, the SQL or a parameter.
 - **One statement per `sql`**: a `sql` holding several is refused (above); lake-sqlite runs them
   all. Use `/v1/batch`.
 - **No `COPY`, `EXPORT DATABASE` or `DETACH`**, and no `query(...)` calls (above).
+- **Plain HTTP, and DuckDB's messages as they are.** The service does not terminate TLS: the bearer
+  token crosses the pod network in clear unless a mesh or the cluster's network policy protects it
+  (the operator's concern). Error messages are DuckDB's, so they can name paths inside the pod (the
+  database file, its spill directory, the home directory); only a client holding the token sees
+  them.
 - The memory guard is DuckDB's `memory_limit` plus the Go heap limit; a query that needs more and
   cannot spill answers `503 out_of_memory` rather than the pod being killed, but DuckDB allocations
   outside its buffer manager are not counted, which is what the unassigned quarter of the container
