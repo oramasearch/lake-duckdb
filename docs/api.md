@@ -3,8 +3,7 @@
 `lake-duckdb`, powered by DuckDB, is the small web service behind lake's **`duckdb` service kind**:
 one DuckDB database behind an HTTP API with a bearer token. DuckDB has no upstream Kubernetes
 operator we would use, so the Orama operator runs it itself, one StatefulSet per service
-(orama-operator [`docs/lake/services.md`](https://github.com/oramasearch/orama-operator/blob/main/docs/lake/services.md);
-liquid-bridge decision 47, amended; lake#195). The contract is the `duckdb` row of lake's
+(orama-operator [`docs/lake/services.md`](https://github.com/oramasearch/orama-operator/blob/main/docs/lake/services.md)). The contract is the `duckdb` row of lake's
 [`docs/control-plane/services.md`](https://github.com/oramasearch/lake/blob/aee5cda/docs/control-plane/services.md)
 and the paragraph after its table ("`lake-duckdb` has the same API as `lake-sqlite`"); this page is
 the whole API as built, and says where DuckDB makes it differ from lake-sqlite.
@@ -12,7 +11,7 @@ the whole API as built, and says where DuckDB makes it differ from lake-sqlite.
 | | |
 |---|---|
 | Source | this repository: [`cmd/lake-duckdb/main.go`](../cmd/lake-duckdb/main.go) and the HTTP API in [`internal/server/`](../internal/server/) |
-| Image | `oramasearch/lake-duckdb:<tag>` (a **private** Docker Hub repository), built from [`Dockerfile`](../Dockerfile) for `linux/amd64` |
+| Image | `oramasearch/lake-duckdb:<tag>` (Docker Hub), built from [`Dockerfile`](../Dockerfile) for `linux/amd64` |
 | Driver | [`github.com/duckdb/duckdb-go/v2`](https://github.com/duckdb/duckdb-go) v2.10505.0, **MIT** — the DuckDB Foundation's continuation of `github.com/marcboeker/go-duckdb/v2` (which stopped at v2.4.3, DuckDB 1.4.1). cgo; DuckDB is linked statically |
 | Engine | DuckDB v1.5.5, from `github.com/duckdb/duckdb-go-bindings` v0.10505.0, **MIT** |
 | Runtime | `gcr.io/distroless/cc-debian12:nonroot` (glibc, no shell), user `65532:65532`, one binary with libstdc++ and libgcc linked in |
@@ -198,7 +197,7 @@ docker buildx build --platform linux/amd64 -t oramasearch/lake-duckdb:<tag> .
 ```
 
 The chart's default is `lakeServices.duckdbImage: oramasearch/lake-duckdb:0.1.0`, so that tag must
-be published (private Docker Hub, created private before the first push) before a DuckDB service can
+be published before a DuckDB service can
 start; a Lake overrides it with `spec.services.duckdbImage`. Changing the image rolls every DuckDB
 service's pod once.
 
