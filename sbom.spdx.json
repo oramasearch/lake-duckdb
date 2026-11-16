@@ -2,41 +2,34 @@
   "spdxVersion": "SPDX-2.3",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "name": "lake-duckdb-1e7f65f95fd2",
-  "documentNamespace": "https://github.com/oramasearch/lake-duckdb/sbom/1e7f65f95fd286a4d825c22cfbbc2b4bf1d3d87e",
+  "name": "lake-duckdb-93fac69a3406",
+  "documentNamespace": "https://github.com/oramasearch/lake-duckdb/sbom/93fac69a34061505b0b312a31bd6a920ef9750e2",
   "creationInfo": {
-    "created": "2026-11-16T06:26:05Z",
+    "created": "2026-11-16T07:48:31Z",
     "creators": [
       "Organization: OramaSearch, Inc.",
       "Tool: tools/sbom.py",
       "Tool: syft"
     ],
     "licenseListVersion": "3.29",
-    "comment": "Made from source commit 1e7f65f95fd286a4d825c22cfbbc2b4bf1d3d87e by tools/sbom.py."
+    "comment": "Made from source commit 93fac69a34061505b0b312a31bd6a920ef9750e2 by tools/sbom.py."
   },
   "documentDescribes": [
     "SPDXRef-DocumentRoot"
   ],
   "packages": [
     {
-      "name": "gcr.io/distroless/cc-debian12",
-      "SPDXID": "SPDXRef-Image-gcr.io-distroless-cc-debian12-9d56ccee667ae7dc",
-      "versionInfo": "nonroot@sha256:9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f",
-      "downloadLocation": "NOASSERTION",
+      "name": "DuckDB",
+      "SPDXID": "SPDXRef-Component-DuckDB-307eda07a29020a2",
+      "versionInfo": "1.5.5",
+      "downloadLocation": "https://github.com/duckdb/duckdb/archive/refs/tags/v1.5.5.tar.gz",
       "filesAnalyzed": false,
       "supplier": "NOASSERTION",
       "copyrightText": "NOASSERTION",
       "licenseConcluded": "NOASSERTION",
-      "licenseDeclared": "NOASSERTION",
-      "primaryPackagePurpose": "CONTAINER",
-      "comment": "Container base image (gcr.io/distroless/cc-debian12:nonroot@sha256:9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f), FROM in Dockerfile. Its own packages are in the image SBOM of each release image.",
-      "externalRefs": [
-        {
-          "referenceCategory": "PACKAGE-MANAGER",
-          "referenceType": "purl",
-          "referenceLocator": "pkg:docker/gcr.io/distroless/cc-debian12@sha256%3A9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f?tag=nonroot"
-        }
-      ]
+      "licenseDeclared": "MIT",
+      "comment": "built from source in the Dockerfile. How it is used: C++ library, linked statically into the image's binary. Listed in THIRD_PARTY_LICENSES.",
+      "homepage": "https://github.com/duckdb/duckdb/archive/refs/tags/v1.5.5.tar.gz"
     },
     {
       "name": "github.com/apache/arrow-go/v18",
@@ -479,8 +472,8 @@
     },
     {
       "name": "golang",
-      "SPDXID": "SPDXRef-Image-golang-54fea379155a420f",
-      "versionInfo": "1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea",
+      "SPDXID": "SPDXRef-Image-golang-45a4ad7e513ecd28",
+      "versionInfo": "1.27.4-alpine@sha256:0a5f7fe796599ff487605987432e7619ae45beeb2fba4c2ce0b907879932aebf",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
       "supplier": "NOASSERTION",
@@ -488,12 +481,12 @@
       "licenseConcluded": "NOASSERTION",
       "licenseDeclared": "NOASSERTION",
       "primaryPackagePurpose": "CONTAINER",
-      "comment": "Container base image (golang:1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea), FROM in Dockerfile. Its own packages are in the image SBOM of each release image.",
+      "comment": "Container base image (golang:1.27.4-alpine@sha256:0a5f7fe796599ff487605987432e7619ae45beeb2fba4c2ce0b907879932aebf), FROM in Dockerfile. Its own packages are in the image SBOM of each release image.",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?tag=1.27.4-bookworm"
+          "referenceLocator": "pkg:docker/golang@sha256%3A0a5f7fe796599ff487605987432e7619ae45beeb2fba4c2ce0b907879932aebf?tag=1.27.4-alpine"
         }
       ]
     },
@@ -668,7 +661,7 @@
     {
       "name": "lake-duckdb",
       "SPDXID": "SPDXRef-DocumentRoot",
-      "versionInfo": "1e7f65f95fd2",
+      "versionInfo": "93fac69a3406",
       "downloadLocation": "git+https://github.com/oramasearch/lake-duckdb.git",
       "homepage": "https://github.com/oramasearch/lake-duckdb",
       "filesAnalyzed": false,
@@ -679,21 +672,57 @@
       "copyrightText": "Copyright (c) 2026 OramaSearch, Inc.",
       "primaryPackagePurpose": "SOURCE",
       "comment": "The source tree of lake-duckdb. Packages found by syft in the files git tracks, plus the C and C++ components of THIRD_PARTY_LICENSES and the git submodules."
+    },
+    {
+      "name": "LLVM libc++, libc++abi, libunwind, compiler-rt",
+      "SPDXID": "SPDXRef-Component-LLVM-libc-libc-abi-libunwind-compiler-rt-352ab2678a23b052",
+      "versionInfo": "22.1.3",
+      "downloadLocation": "https://github.com/llvm/llvm-project/tree/llvmorg-22.1.3",
+      "filesAnalyzed": false,
+      "supplier": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0 WITH LLVM-exception",
+      "comment": "How it is used: C++ runtime, linked statically into the image's binary. Listed in THIRD_PARTY_LICENSES.",
+      "homepage": "https://github.com/llvm/llvm-project/tree/llvmorg-22.1.3"
+    },
+    {
+      "name": "musl",
+      "SPDXID": "SPDXRef-Component-musl-d63beb7873afde8b",
+      "versionInfo": "1.2.6",
+      "downloadLocation": "https://musl.libc.org/",
+      "filesAnalyzed": false,
+      "supplier": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "comment": "How it is used: C library, linked statically into the image's binary. Listed in THIRD_PARTY_LICENSES.",
+      "homepage": "https://musl.libc.org/"
     }
   ],
   "relationships": [
+    {
+      "relatedSpdxElement": "SPDXRef-Component-DuckDB-307eda07a29020a2",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Component-LLVM-libc-libc-abi-libunwind-compiler-rt-352ab2678a23b052",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Component-musl-d63beb7873afde8b",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
     {
       "relatedSpdxElement": "SPDXRef-DocumentRoot",
       "relationshipType": "DESCRIBES",
       "spdxElementId": "SPDXRef-DOCUMENT"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Image-gcr.io-distroless-cc-debian12-9d56ccee667ae7dc",
-      "relationshipType": "DEPENDS_ON",
-      "spdxElementId": "SPDXRef-DocumentRoot"
-    },
-    {
-      "relatedSpdxElement": "SPDXRef-Image-golang-54fea379155a420f",
+      "relatedSpdxElement": "SPDXRef-Image-golang-45a4ad7e513ecd28",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-DocumentRoot"
     },

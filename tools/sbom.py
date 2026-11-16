@@ -53,7 +53,17 @@ ORIGINATOR = SUPPLIER                             # a fork names its upstream he
 HOME = f"https://github.com/oramasearch/{REPOSITORY}"
 # Components neither a lock file nor tools/third-party-licenses.* lists (a base model, for example),
 # in that list's form: name, version, license, use, url.
-EXTRA_COMPONENTS: list[dict] = []
+EXTRA_COMPONENTS: list[dict] = [
+    {"name": "DuckDB (built from source in the Dockerfile)", "version": "1.5.5", "license": "MIT",
+     "use": "C++ library, linked statically into the image's binary",
+     "url": "https://github.com/duckdb/duckdb/archive/refs/tags/v1.5.5.tar.gz"},
+    {"name": "musl", "version": "1.2.6", "license": "MIT",
+     "use": "C library, linked statically into the image's binary", "url": "https://musl.libc.org/"},
+    {"name": "LLVM libc++, libc++abi, libunwind, compiler-rt", "version": "22.1.3",
+     "license": "Apache-2.0 WITH LLVM-exception",
+     "use": "C++ runtime, linked statically into the image's binary",
+     "url": "https://github.com/llvm/llvm-project/tree/llvmorg-22.1.3"},
+]
 # --- end of the repository's settings ---------------------------------------------------------
 
 SYFT_TESTED = "1.57.1"
