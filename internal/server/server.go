@@ -27,6 +27,10 @@ import (
 const (
 	// DefaultMaxRows caps the rows one statement returns.
 	DefaultMaxRows = 10000
+	// DefaultMaxResponseBytes caps the values one request returns, over all its statements: 32 MiB
+	// (counted as the bytes of strings and blobs, plus a few for every other value). The row cap
+	// alone does not bound memory: 10,000 rows of 10 MB strings are 100 GB.
+	DefaultMaxResponseBytes = 32 << 20
 	// DefaultMaxBodyBytes caps a request body: 16 MiB.
 	DefaultMaxBodyBytes = 16 << 20
 	// DefaultRequestTimeout bounds every request, the SQL included: the statement timeout.
@@ -49,12 +53,13 @@ type Config struct {
 	MemoryLimit int64
 	// Threads is DuckDB's worker thread count; zero leaves DuckDB's default (the CPU count).
 	Threads int
-	// MaxRows, MaxBodyBytes, RequestTimeout and Concurrency default to the constants above when
-	// zero.
-	MaxRows        int
-	MaxBodyBytes   int64
-	RequestTimeout time.Duration
-	Concurrency    int
+	// MaxRows, MaxResponseBytes, MaxBodyBytes, RequestTimeout and Concurrency default to the
+	// constants above when zero.
+	MaxRows          int
+	MaxResponseBytes int64
+	MaxBodyBytes     int64
+	RequestTimeout   time.Duration
+	Concurrency      int
 	// Logger receives one line per request; nil discards them.
 	Logger *slog.Logger
 }
@@ -65,6 +70,7 @@ type Server struct {
 	slots     chan struct{}
 	tokenHash [sha256.Size]byte
 	maxRows   int
+	maxAnswer int64
 	maxBody   int64
 	timeout   time.Duration
 	log       *slog.Logger
@@ -82,12 +88,16 @@ func Open(ctx context.Context, cfg Config) (*Server, error) {
 	s := &Server{
 		tokenHash: sha256.Sum256([]byte(cfg.Token)),
 		maxRows:   cfg.MaxRows,
+		maxAnswer: cfg.MaxResponseBytes,
 		maxBody:   cfg.MaxBodyBytes,
 		timeout:   cfg.RequestTimeout,
 		log:       cfg.Logger,
 	}
 	if s.maxRows <= 0 {
 		s.maxRows = DefaultMaxRows
+	}
+	if s.maxAnswer <= 0 {
+		s.maxAnswer = DefaultMaxResponseBytes
 	}
 	if s.maxBody <= 0 {
 		s.maxBody = DefaultMaxBodyBytes
@@ -277,6 +287,9 @@ func (st statement) args() ([]interface{}, *apiError) {
 	if strings.TrimSpace(st.SQL) == "" {
 		return nil, &apiError{http.StatusBadRequest, "invalid_request", "sql is required"}
 	}
+	if apiErr := guard(st.SQL); apiErr != nil {
+		return nil, apiErr
+	}
 	args, err := decodeParams(st.Params)
 	if err != nil {
 		return nil, &apiError{http.StatusBadRequest, "invalid_params", err.Error()}
@@ -294,9 +307,10 @@ func (s *Server) handleOne(ctx context.Context, body []byte, how mode) (interfac
 		return nil, apiErr
 	}
 	var answer result
+	budget := s.maxAnswer
 	apiErr = s.withConn(ctx, func(conn *duckdb.Conn) *apiError {
 		var runErr *apiError
-		answer, runErr = s.run(ctx, conn, st.SQL, args, how)
+		answer, runErr = s.run(ctx, conn, st.SQL, args, how, &budget)
 		return runErr
 	})
 	if apiErr != nil {
@@ -333,13 +347,14 @@ func (s *Server) handleBatch(ctx context.Context, body []byte) (interface{}, *ap
 		args[i] = a
 	}
 	results := make([]interface{}, 0, len(req.Statements))
+	budget := s.maxAnswer // shared by every statement in the batch
 	apiErr := s.withConn(ctx, func(conn *duckdb.Conn) *apiError {
 		if _, err := conn.ExecContext(ctx, "BEGIN TRANSACTION", nil); err != nil {
 			return sqlError(ctx, err)
 		}
 		// withConn rolls back whatever is still open when this returns without committing.
 		for i, st := range req.Statements {
-			answer, apiErr := s.run(ctx, conn, st.SQL, args[i], modeAuto)
+			answer, apiErr := s.run(ctx, conn, st.SQL, args[i], modeAuto, &budget)
 			if apiErr != nil {
 				apiErr.message = fmt.Sprintf("statements[%d]: %s", i, apiErr.message)
 				return apiErr

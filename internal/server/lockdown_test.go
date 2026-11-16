@@ -52,6 +52,11 @@ func TestLockdownRefusesEveryEscape(t *testing.T) {
 		{"LOAD a file", "LOAD '" + filepath.Join(dir, "evil.duckdb_extension") + "'"},
 		{"an http URL as a table", "SELECT * FROM 'https://example.com/data.csv'"},
 		{"CREATE SECRET", "CREATE SECRET s (TYPE s3, KEY_ID 'a', SECRET 'b')"},
+		// Extensions linked into the binary but not loaded: tpch and tpcds stay unloaded.
+		{"LOAD tpch", "LOAD tpch"},
+		{"LOAD tpcds", "LOAD tpcds"},
+		{"tpch dbgen", "CALL dbgen(sf = 0.01)"},
+		{"tpcds dsdgen", "CALL dsdgen(sf = 0.01)"},
 		// Undoing the lockdown after it is locked.
 		{"SET enable_external_access=true", "SET enable_external_access = true"},
 		{"RESET enable_external_access", "RESET enable_external_access"},

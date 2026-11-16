@@ -195,3 +195,40 @@ func formatTime(t time.Time, dbType string) string {
 	}
 	return t.UTC().Format(time.RFC3339Nano)
 }
+
+// valueSize estimates the bytes a value the driver read takes in the answer: the length of a string
+// or blob, the sum of a nested value's members, and 8 for anything else. It bounds the response,
+// so it only needs to grow with the real size, not match it.
+func valueSize(value interface{}) int64 {
+	switch v := value.(type) {
+	case string:
+		return int64(len(v)) + 8
+	case []byte:
+		return int64(len(v)) + 8
+	case []interface{}:
+		size := int64(8)
+		for _, element := range v {
+			size += valueSize(element)
+		}
+		return size
+	case map[string]interface{}:
+		size := int64(8)
+		for key, member := range v {
+			size += int64(len(key)) + valueSize(member)
+		}
+		return size
+	case duckdb.OrderedMap:
+		size := int64(8)
+		for _, key := range v.Keys() {
+			size += valueSize(key)
+		}
+		for _, member := range v.Values() {
+			size += valueSize(member)
+		}
+		return size
+	case duckdb.Union:
+		return int64(len(v.Tag)) + valueSize(v.Value)
+	default:
+		return 8
+	}
+}

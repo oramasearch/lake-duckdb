@@ -144,7 +144,8 @@ func (s *Server) withConn(ctx context.Context, fn func(conn *duckdb.Conn) *apiEr
 
 // run prepares and runs one client statement on conn. A sql holding several statements runs all
 // of them; the driver executes every one but the last while preparing, and the last answers.
-func (s *Server) run(ctx context.Context, conn *duckdb.Conn, query string, args []interface{}, how mode) (result, *apiError) {
+// budget is what is left of the request's response bytes; the rows read are taken from it.
+func (s *Server) run(ctx context.Context, conn *duckdb.Conn, query string, args []interface{}, how mode, budget *int64) (result, *apiError) {
 	prepared, err := conn.PrepareContext(ctx, query)
 	if err != nil {
 		return result{}, sqlError(ctx, err)
@@ -187,7 +188,7 @@ func (s *Server) run(ctx context.Context, conn *duckdb.Conn, query string, args 
 	if err != nil {
 		return result{}, sqlError(ctx, err)
 	}
-	answer, err := s.readRows(rows)
+	answer, err := s.readRows(rows, budget)
 	if err != nil {
 		return result{}, sqlError(ctx, err)
 	}
@@ -215,9 +216,9 @@ func countsOnly(stmt *duckdb.Stmt, kind duckdb.StmtType) bool {
 	return name == "Count" || name == "Success"
 }
 
-// readRows reads up to maxRows rows and closes rows. When there are more, it stops and marks the
-// result truncated.
-func (s *Server) readRows(rows driver.Rows) (queryResult, error) {
+// readRows reads up to maxRows rows, and no more than budget bytes of values, and closes rows. When
+// there are more, it stops and marks the result truncated. budget goes down by what was read.
+func (s *Server) readRows(rows driver.Rows, budget *int64) (queryResult, error) {
 	defer rows.Close()
 	columns := rows.Columns()
 	types := make([]string, len(columns))
@@ -243,6 +244,15 @@ func (s *Server) readRows(rows driver.Rows) (queryResult, error) {
 			result.Truncated = true
 			break
 		}
+		var size int64
+		for _, value := range values {
+			size += valueSize(value)
+		}
+		if size > *budget {
+			result.Truncated = true
+			break
+		}
+		*budget -= size
 		row := make([]interface{}, len(columns))
 		for i, value := range values {
 			row[i] = encodeValue(value, types[i])
