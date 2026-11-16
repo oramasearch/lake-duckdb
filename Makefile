@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 IMG ?= oramasearch/lake-duckdb:dev
 
 .PHONY: build test vet docker-build run

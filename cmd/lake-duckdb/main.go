@@ -1,7 +1,4 @@
-/*
-Copyright 2026 OramaSearch.
-Licensed under the Apache License, Version 2.0.
-*/
+// SPDX-License-Identifier: MIT
 
 // lake-duckdb serves one DuckDB database over HTTP for lake's duckdb service kind, powered by
 // DuckDB. The Orama operator runs it as a one-pod StatefulSet per service (orama-operator

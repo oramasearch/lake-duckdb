@@ -1,7 +1,4 @@
-/*
-Copyright 2026 OramaSearch.
-Licensed under the Apache License, Version 2.0.
-*/
+// SPDX-License-Identifier: MIT
 
 // Package server is lake-duckdb's HTTP API over one DuckDB database: POST /v1/query, /v1/exec and
 // /v1/batch behind a bearer token, and an unauthenticated GET /healthz. The API is lake-sqlite's

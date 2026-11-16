@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 # lake-duckdb: one binary over one DuckDB database, powered by DuckDB. The driver,
 # github.com/duckdb/duckdb-go/v2 (MIT), links DuckDB (MIT) statically through cgo, so the build
 # needs a C/C++ toolchain and the runtime needs glibc: the builder is Debian bookworm and the runtime
