@@ -265,9 +265,8 @@ docker buildx build --platform linux/amd64 -t oramasearch/lake-duckdb:<tag> .
 # or: make docker-build IMG=oramasearch/lake-duckdb:<tag>
 ```
 
-The chart's default is `lakeServices.duckdbImage: oramasearch/lake-duckdb:0.1.0`, so that tag must
-be published before a DuckDB service can
-start; a Lake overrides it with `spec.services.duckdbImage`. Changing the image rolls every DuckDB
+The operator chart's default (`lakeServices.duckdbImage`) names a released tag, for example
+`oramasearch/lake-duckdb:0.2.0`, so that tag must be published before a DuckDB service can start; a Lake overrides it with `spec.services.duckdbImage`. Changing the image rolls every DuckDB
 service's pod once.
 
 ## Run locally

@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:bb448fb4-44da-5057-9961-644783934bfc",
+  "serialNumber": "urn:uuid:c618a2e1-b450-5505-a71e-c99395d8da96",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-11-16T06:07:37Z",
+    "timestamp": "2026-11-16T06:16:30Z",
     "tools": {
       "components": [
         {
@@ -603,7 +603,7 @@
       "bom-ref": "DocumentRoot",
       "type": "library",
       "name": "lake-duckdb",
-      "version": "7a320be4371d",
+      "version": "bf5f9cffd722",
       "licenses": [
         {
           "license": {
