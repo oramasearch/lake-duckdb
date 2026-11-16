@@ -13,6 +13,8 @@
 //	                          memory_limit is half of it and the Go heap a quarter, leaving a quarter
 //	                          for what neither tracks
 //	LAKE_DUCKDB_THREADS       DuckDB's worker threads (optional; default: the CPU count DuckDB sees)
+//
+// `lake-duckdb --version` prints the version and exits.
 package main
 
 import (
@@ -29,6 +31,7 @@ import (
 	"time"
 
 	"github.com/oramasearch/lake-duckdb/internal/server"
+	"github.com/oramasearch/lake-duckdb/internal/version"
 )
 
 const (
@@ -41,6 +44,10 @@ const (
 )
 
 func main() {
+	if len(os.Args) == 2 && os.Args[1] == "--version" {
+		fmt.Println("lake-duckdb", version.Version)
+		return
+	}
 	out, err := detachStdout()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "lake-duckdb:", err)
@@ -110,7 +117,7 @@ func run(log *slog.Logger) error {
 	}
 	errs := make(chan error, 1)
 	go func() {
-		log.Info("lake-duckdb listening", "addr", addr, "path", path)
+		log.Info("lake-duckdb listening", "version", version.Version, "addr", addr, "path", path)
 		errs <- httpServer.ListenAndServe()
 	}()
 

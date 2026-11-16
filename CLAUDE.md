@@ -15,6 +15,8 @@
   Never add an extension, `allowed_directories`, or anything that re-opens file or network access.
 - **Never log** SQL, parameters, bodies or the token.
 - **Build and verify:** `go build ./... && go vet ./... && go test ./...`.
+- **Releases:** the version is `internal/version.Version`; each has its notes in
+  [`docs/releases/`](docs/releases/README.md) (`TestReleaseVersionIsDocumented`).
 - **Images** are built for `linux/amd64` on an amd64 host (cgo cross-compiles poorly) and tagged
   with an immutable semantic version. A new image version is adopted by bumping the operator's
   default (`chart/values.yaml` `lakeServices.duckdbImage`, `cmd/main.go` `--lake-duckdb-image`).

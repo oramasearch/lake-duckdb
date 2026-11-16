@@ -101,7 +101,8 @@ Every limit, with the reason: [`docs/api.md` → Known limits](docs/api.md#known
 
 - [`docs/api.md`](docs/api.md): the whole API, configuration, the lockdown, limits, errors, build
   and local run.
-- [`docs/releases/`](docs/releases/README.md): the release notes.
+- [`docs/releases/`](docs/releases/README.md): the release notes. The latest release is
+  [v0.2.0](docs/releases/v0.2.0.md).
 
 ## Community
 
