@@ -2,17 +2,17 @@
   "spdxVersion": "SPDX-2.3",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "name": "lake-duckdb-e36819343c4b",
-  "documentNamespace": "https://github.com/oramasearch/lake-duckdb/sbom/e36819343c4b2f9b124d8b239ed7ae92019bb921",
+  "name": "lake-duckdb-63dbb572336f",
+  "documentNamespace": "https://github.com/oramasearch/lake-duckdb/sbom/63dbb572336f2c711e41f2c3da081e6d670db8c4",
   "creationInfo": {
-    "created": "2026-11-15T17:24:24Z",
+    "created": "2026-11-16T01:55:10Z",
     "creators": [
       "Organization: OramaSearch, Inc.",
       "Tool: tools/sbom.py",
       "Tool: syft"
     ],
     "licenseListVersion": "3.29",
-    "comment": "Made from source commit e36819343c4b2f9b124d8b239ed7ae92019bb921 by tools/sbom.py."
+    "comment": "Made from source commit 63dbb572336f2c711e41f2c3da081e6d670db8c4 by tools/sbom.py."
   },
   "documentDescribes": [
     "SPDXRef-DocumentRoot"
@@ -668,7 +668,7 @@
     {
       "name": "lake-duckdb",
       "SPDXID": "SPDXRef-DocumentRoot",
-      "versionInfo": "e36819343c4b",
+      "versionInfo": "63dbb572336f",
       "downloadLocation": "git+https://github.com/oramasearch/lake-duckdb.git",
       "homepage": "https://github.com/oramasearch/lake-duckdb",
       "filesAnalyzed": false,
