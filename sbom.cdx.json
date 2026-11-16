@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:e9afbacd-1d56-5bcd-8081-92148752597c",
+  "serialNumber": "urn:uuid:bb448fb4-44da-5057-9961-644783934bfc",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-11-16T04:56:38Z",
+    "timestamp": "2026-11-16T06:07:37Z",
     "tools": {
       "components": [
         {
@@ -433,11 +433,11 @@
       ]
     },
     {
-      "bom-ref": "pkg:docker/golang@sha256%3A3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437?package-id=Image-golang-d19234e066e4ec6a&tag=1.25-bookworm",
+      "bom-ref": "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?package-id=Image-golang-54fea379155a420f&tag=1.27.4-bookworm",
       "type": "library",
       "name": "golang",
-      "version": "1.25-bookworm@sha256:3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437",
-      "purl": "pkg:docker/golang@sha256%3A3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437?tag=1.25-bookworm",
+      "version": "1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea",
+      "purl": "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?tag=1.27.4-bookworm",
       "properties": [
         {
           "name": "syft:package:type",
@@ -603,7 +603,7 @@
       "bom-ref": "DocumentRoot",
       "type": "library",
       "name": "lake-duckdb",
-      "version": "29ee5b0d98f1",
+      "version": "7a320be4371d",
       "licenses": [
         {
           "license": {
@@ -618,7 +618,7 @@
       "ref": "DocumentRoot",
       "dependsOn": [
         "pkg:docker/gcr.io/distroless/cc-debian12@sha256%3A9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f?package-id=Image-gcr.io-distroless-cc-debian12-9d56ccee667ae7dc&tag=nonroot",
-        "pkg:docker/golang@sha256%3A3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437?package-id=Image-golang-d19234e066e4ec6a&tag=1.25-bookworm"
+        "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?package-id=Image-golang-54fea379155a420f&tag=1.27.4-bookworm"
       ]
     }
   ]

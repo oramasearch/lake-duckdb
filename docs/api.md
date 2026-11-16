@@ -64,8 +64,71 @@ also runs the check on many connections at once.
 What stays allowed: everything inside the one database (tables, views, macros, sequences,
 `CHECKPOINT`), `ATTACH ':memory:'` (an in-memory database, bounded by the memory limit and gone on
 restart), session settings that are not configuration options (`SET search_path`), and the
-extensions linked into the binary (`parquet`, `json`, `icu`, `core_functions`), which read nothing
-from outside while external access is off.
+extensions loaded in the binary (`core_functions`, `parquet`, `json`, `icu`, `autocomplete`), which
+read nothing from outside while external access is off. The prebuilt DuckDB library also links
+`tpch` and `tpcds`; they are not loaded, and `LOAD tpch`, `LOAD tpcds`, `CALL dbgen(...)` and
+`CALL dsdgen(...)` fail (tested).
+
+### Statements the lockdown cannot lock
+
+`lock_configuration` stops configuration options, but DuckDB v1.5 also changes state through
+functions and pragmas that are not options, and it does not stop those
+([duckdb#28110](https://github.com/duckdb/duckdb/issues/28110), fixed after v1.5):
+`CALL enable_logging(storage := 'stdout')` would write every statement's SQL to the pod's log, and
+`storage := 'file'` would make every later statement fail and the process abort when it closes.
+Profiling, progress bars, verification modes, optimizer and object-cache switches,
+checkpoint-on-shutdown and the PEG parser switches change state the same way and stay on the pooled
+connection after the request.
+
+So, before any statement reaches DuckDB, the service refuses with **`403 forbidden`** every
+statement that names one of these, quoted or not, in any case, schema-qualified or inside a macro,
+view or `PREPARE` ([`internal/server/guard.go`](../internal/server/guard.go) has the list):
+`enable_logging`, `disable_logging`, `truncate_duckdb_logs`, `write_log`, `enable_profiling`,
+`disable_profiling`, `enable_profile`, `disable_profile`, `all_profiling_output`,
+`enable_progress_bar`, `disable_progress_bar`, `enable_print_progress_bar`,
+`disable_print_progress_bar`, `enable_verification`, `disable_verification`, `verify_external`,
+`verify_fetch_row`, `verify_parallelism`, `verify_serializer` (and their `disable_` forms),
+`enable_optimizer`, `disable_optimizer`, `enable_object_cache`, `disable_object_cache`,
+`enable_checkpoint_on_shutdown`, `disable_checkpoint_on_shutdown`, `enable_peg_parser`,
+`disable_peg_parser`, `check_peg_parser`, `json_execute_serialized_sql`, `arrow_scan` and
+`arrow_scan_dumb`. A **call of `query(...)`** is refused too, because it runs a SQL string that can be
+built from pieces (`'FROM enable_' || 'logging()'`); a column or alias named `query`, and
+`query_table`, are fine. The names are matched as words anywhere in the text, so one inside a string
+literal is refused as well (`current_setting('enable_logging')`; write `'enable_' || 'logging'`).
+
+[`internal/server/guard_test.go`](../internal/server/guard_test.go) sends each of them, in each of
+those shapes, through every route and checks that logging and profiling are still off afterwards. It
+also lists every PRAGMA and table function the engine has and fails on any that is neither refused
+nor on its reviewed allow list, so a DuckDB upgrade that adds one is classified on purpose.
+
+As a second line, the service points file descriptor 1 at `/dev/null` at startup and writes its own
+request log to a duplicate of the original stdout ([`cmd/lake-duckdb/stdout.go`](../cmd/lake-duckdb/stdout.go)):
+whatever DuckDB prints to stdout never reaches the pod's log. Standard error is left as it is, so the
+Go runtime can still report a crash; the only DuckDB output found there (the profiler's query trees)
+comes from the profiling pragmas, which the guard refuses.
+
+### One statement, and the statement types the service never runs
+
+**Each `sql` holds exactly one statement** (a trailing `;` or comment is fine). The service counts
+the statements with DuckDB's own parser before anything runs
+([`internal/server/split.go`](../internal/server/split.go), on a separate in-memory database where
+nothing is executed) and refuses more than one with `400 invalid_request`. The driver would run
+every statement but the last while preparing, past every check made on the prepared statement: a
+hidden `COMMIT; SELECT 1` used to commit a batch half-way. Send several statements through
+`/v1/batch`.
+
+The one statement is then prepared (which binds it; it does not run) and refused with
+**`403 forbidden`** when its type is `COPY` (to or from anywhere), `EXPORT DATABASE` or `DETACH`.
+`enable_external_access` leaves DuckDB its own files (the database, its WAL and the spill
+directory), so `COPY ... TO 'main.duckdb'` could overwrite the database with a CSV, after which the
+pod never starts again; `DETACH` of the main database would leave every later request without its
+tables while `/healthz` still answers.
+
+Every request also gets **a fresh connection**, discarded when the request ends, so nothing a client
+sets on a connection outlives its request: `USE`, `SET search_path`, temporary tables, prepared
+statements and variables are gone at the next request. What is the database's, not one
+connection's, does last: tables and other objects in the database, and an attached `:memory:`
+database until the pod restarts.
 
 ## API
 
@@ -117,8 +180,9 @@ back as `{"$base64": ...}` (its 16 bytes), a time as RFC 3339, and a `DECIMAL` s
 ### `POST /v1/query`
 
 `{"sql", "params"}` answers `200` `{"columns": [...], "rows": [[...]], "truncated": true}`. At most
-**10,000 rows**; when there were more, the answer stops there and carries `"truncated": true` (the key
-is absent otherwise). A statement that returns no rows still answers `columns` and an empty `rows`.
+**10,000 rows** and **32 MiB of values** (strings counted as JSON writes them, escapes included,
+blobs as their base64, plus a margin for every other value); when there were more, the answer stops there and carries `"truncated": true` (the key is
+absent otherwise). A single value larger than 32 MiB answers no rows and `"truncated": true`. A statement that returns no rows still answers `columns` and an empty `rows`.
 DuckDB answers a statement without data with one column: an `INSERT`, `UPDATE` or `DELETE` sent to
 `/v1/query` answers `{"columns": ["Count"], "rows": [[n]]}`.
 
@@ -134,7 +198,7 @@ RETURNING` through `/v1/query` or `/v1/batch` to read generated values.
 `{"statements": [{"sql", "params"}, ...]}` runs every statement **in order, in one transaction**,
 and answers `200` `{"results": [...]}`, one result per statement: a statement that returns data (a
 `SELECT`, `EXPLAIN`, `PRAGMA`, `CALL`, or `INSERT/UPDATE/DELETE ... RETURNING`) answers like
-`/v1/query` (with the same 10,000-row cap), any other — DuckDB's single `Count` or `Success` column —
+`/v1/query` (with the same 10,000-row cap; the 32 MiB cap is shared by every statement in the batch), any other — DuckDB's single `Count` or `Success` column —
 like `/v1/exec`. If any statement fails, the whole transaction is rolled back and the answer is that
 statement's error, its message prefixed with `statements[<i>]: `. Parameters are checked before the
 transaction begins, so a bad parameter runs nothing. An empty `statements` is `400
@@ -143,9 +207,9 @@ one transaction).
 
 ### Transactions
 
-**No transaction outlives its request.** After every request the connection is rolled back before it
-returns to the pool, so a `BEGIN` sent alone to `/v1/exec` is undone when that request ends. Use
-`/v1/batch` for statements that must commit together.
+**No transaction outlives its request.** After every request the connection is rolled back and
+closed, so a `BEGIN` sent alone to `/v1/exec` is undone when that request ends. Use `/v1/batch` for
+statements that must commit together.
 
 ### `GET /healthz`
 
@@ -162,10 +226,10 @@ Every error is `{"error": {"code": "...", "message": "..."}}`:
 | Status | `code` | When |
 |---|---|---|
 | 400 | `sql_error` | DuckDB refused the statement (syntax, missing table, constraint, a locked setting, ...); the message is DuckDB's |
-| 400 | `invalid_request` | the body is not the expected JSON, `sql` is empty or only a comment, `statements` is empty, or a batch holds a transaction statement |
+| 400 | `invalid_request` | the body is not the expected JSON, `sql` is empty or only a comment, `sql` holds more than one statement, `statements` is empty, or a batch holds a transaction statement |
 | 400 | `invalid_params` | a parameter cannot be bound (see the table above) |
 | 401 | `unauthorized` | no or a wrong bearer token |
-| 403 | `forbidden` | the statement reached for a file, the network or an extension (the lockdown) |
+| 403 | `forbidden` | the statement reached for a file, the network or an extension (the lockdown), names a function the lockdown cannot lock, or is a `COPY`, `EXPORT DATABASE` or `DETACH` (above) |
 | 404 | `not_found` | an unknown route (with a valid token) |
 | 405 | `method_not_allowed` | a route called with the wrong method |
 | 409 | `conflict` | a transaction conflict with a concurrent writer; retry |
@@ -184,12 +248,17 @@ Every error is `{"error": {"code": "...", "message": "..."}}`:
   for up to 30 s, then closes the database, which checkpoints the WAL into `main.duckdb`. The pod's
   `terminationGracePeriodSeconds` is 45.
 - One JSON line per request on stdout: `method`, `path`, `status`, `bytes`, `request_bytes`,
-  `duration_ms`. The SQL, its parameters, the body, headers and the token are **never** logged.
+  `duration_ms`. The SQL, its parameters, the body, headers and the token are **never** logged, and
+  DuckDB's own output never reaches the log (descriptor 1 is `/dev/null`; the log is written to a
+  duplicate of the original stdout).
 
 ## Build
 
-The image is built from the repository root for `linux/amd64` (the cluster's architecture), on an
-amd64 builder — the build uses cgo, so build it natively (the cluster BuildKit), not under emulation:
+The image is built from the repository root for `linux/amd64`, on an amd64 builder: the build uses
+cgo, so build it natively, not under emulation. The builder stage is `golang:1.27.4-bookworm` and
+the runtime `gcr.io/distroless/cc-debian12:nonroot`, both pinned by digest; the two share Debian
+12's glibc, so they move together. `go.mod` keeps `go 1.25.0` as the oldest Go that builds the
+source; release images are built with a Go release that still gets security fixes.
 
 ```sh
 docker buildx build --platform linux/amd64 -t oramasearch/lake-duckdb:<tag> .
@@ -221,12 +290,22 @@ directory) cover the token (missing, wrong, prefix, suffix, other schemes, and `
 one), every value type, request errors and their codes, the 16 MiB cap, exec results, a primary-key
 violation, batch commit, rollback on a SQL error and on a bad parameter, `RETURNING` in a batch,
 that no transaction outlives its request, the 10,000-row cap on `/v1/query` and in a batch, the
+32 MiB response cap (counting JSON escapes, and shared by a batch), one statement per `sql`, the
+refused statement types, that no connection state outlives its request, the
 statement timeout (and that the service answers afterwards), `/healthz` on an open and a closed
 database, refusing to start without a token or a writable path, data surviving a reopen, the memory
-and thread limits, the lockdown (above), and that the request log never carries the token, the SQL
-or a parameter.
+and thread limits, the lockdown and the statement guard (above), and that the request log never
+carries the token, the SQL or a parameter.
 
 ## Known limits
+
+- **The statement guard is a list of names.** It holds for DuckDB v1.5.5, whose every PRAGMA and
+  table function the tests classify, until a DuckDB with the upstream fix
+  ([duckdb#28110](https://github.com/duckdb/duckdb/issues/28110)) replaces it. It also refuses a
+  refused name inside a string literal, and `query(...)` calls.
+- **The response cap counts values after DuckDB has produced them.** One huge value (DuckDB allows
+  strings up to 4 GB) is held in memory before the cap drops it; DuckDB's `memory_limit` and the Go
+  heap limit bound that.
 
 - **One copy.** One pod on one `ReadWriteOnce` volume, no replication and no backup yet: a lost
   volume loses the database, and the service is down while its pod restarts or moves. DuckDB has
@@ -235,9 +314,14 @@ or a parameter.
   `COPY FROM` a file or URL; data arrives through `INSERT` (parameters, or `VALUES`). Bulk loading
   from object storage would need a deliberate, allow-listed design (`allowed_directories`), not a
   relaxed lockdown.
-- A `sql` holding several statements separated by `;` runs all of them, each committing on its own
-  (inside a batch, inside the batch's transaction), and only the last one answers. Send one
-  statement per `sql`.
+- **One statement per `sql`**: a `sql` holding several is refused (above); lake-sqlite runs them
+  all. Use `/v1/batch`.
+- **No `COPY`, `EXPORT DATABASE` or `DETACH`**, and no `query(...)` calls (above).
+- **Plain HTTP, and DuckDB's messages as they are.** The service does not terminate TLS: the bearer
+  token crosses the pod network in clear unless a mesh or the cluster's network policy protects it
+  (the operator's concern). Error messages are DuckDB's, so they can name paths inside the pod (the
+  database file, its spill directory, the home directory); only a client holding the token sees
+  them.
 - The memory guard is DuckDB's `memory_limit` plus the Go heap limit; a query that needs more and
   cannot spill answers `503 out_of_memory` rather than the pod being killed, but DuckDB allocations
   outside its buffer manager are not counted, which is what the unassigned quarter of the container

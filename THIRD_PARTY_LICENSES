@@ -13,10 +13,11 @@ github.com/duckdb/duckdb-go-bindings/lib/linux-amd64  v0.10505.0  MIT           
 github.com/duckdb/duckdb-go/v2                        v2.10505.0  MIT           Go package (linked)  https://github.com/duckdb/duckdb-go/blob/v2.10505.0/LICENSE
 github.com/go-viper/mapstructure/v2                   v2.5.0      MIT           Go package (linked)  https://github.com/go-viper/mapstructure/blob/v2.5.0/LICENSE
 github.com/google/uuid                                v1.6.0      BSD-3-Clause  Go package (linked)  https://github.com/google/uuid/blob/v1.6.0/LICENSE
+golang.org/x/sys/unix                                 v0.40.0     BSD-3-Clause  Go package (linked)  https://cs.opensource.google/go/x/sys/+/v0.40.0:LICENSE
 
 Go toolchain and container base image
 
-The binary is compiled with the Go toolchain (golang:1.25-bookworm, pinned by digest, used only to build);
+The binary is compiled with the Go toolchain (golang:1.27.4-bookworm, pinned by digest, used only to build);
 the Go standard library linked into it is BSD-3-Clause (https://go.dev/LICENSE). The image runs
 FROM gcr.io/distroless/cc-debian12:nonroot, pinned by digest (https://github.com/GoogleContainerTools/
 distroless, Apache-2.0), which holds Debian 12's glibc (LGPL-2.1, linked dynamically), libgcc and libstdc++ (GPL-3.0 with the
@@ -2035,6 +2036,38 @@ copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
    * Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+================================================================================
+golang.org/x/sys/unix v0.40.0 — BSD-3-Clause
+https://cs.opensource.google/go/x/sys/+/v0.40.0:LICENSE
+
+Copyright 2009 The Go Authors.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Google LLC nor the names of its
 contributors may be used to endorse or promote products derived from
 this software without specific prior written permission.
 

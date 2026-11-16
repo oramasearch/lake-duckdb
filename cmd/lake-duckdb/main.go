@@ -41,7 +41,12 @@ const (
 )
 
 func main() {
-	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	out, err := detachStdout()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "lake-duckdb:", err)
+		os.Exit(1)
+	}
+	log := slog.New(slog.NewJSONHandler(out, nil))
 	if err := run(log); err != nil {
 		log.Error("lake-duckdb stopped", "err", err.Error())
 		os.Exit(1)

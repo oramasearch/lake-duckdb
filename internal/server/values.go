@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	duckdb "github.com/duckdb/duckdb-go/v2"
 )
@@ -194,4 +195,74 @@ func formatTime(t time.Time, dbType string) string {
 		return t.UTC().Format("2006-01-02 15:04:05.999999999")
 	}
 	return t.UTC().Format(time.RFC3339Nano)
+}
+
+// valueSize bounds the bytes a value the driver read takes in the answer: a string as it is written
+// in JSON (escapes included: a control character or <, > and & take six bytes, a quote or backslash
+// two), a blob as its base64, the sum of a nested value's members, and 32 for anything else (the
+// longest number or timestamp the encoder writes is shorter). Eight more per value cover the quotes
+// and separators. It bounds the response, so it may count high but never low.
+func valueSize(value interface{}) int64 {
+	switch v := value.(type) {
+	case string:
+		return jsonStringSize(v) + 8
+	case []byte:
+		return int64((len(v)+2)/3*4) + 24
+	case []interface{}:
+		size := int64(8)
+		for _, element := range v {
+			size += valueSize(element)
+		}
+		return size
+	case map[string]interface{}:
+		size := int64(8)
+		for key, member := range v {
+			size += jsonStringSize(key) + valueSize(member)
+		}
+		return size
+	case duckdb.OrderedMap:
+		size := int64(8)
+		for _, key := range v.Keys() {
+			size += valueSize(key) + 16
+		}
+		for _, member := range v.Values() {
+			size += valueSize(member)
+		}
+		return size
+	case duckdb.Union:
+		return jsonStringSize(v.Tag) + valueSize(v.Value) + 24
+	default:
+		return 32
+	}
+}
+
+// jsonStringSize is the length of s once encoding/json escapes it, without the quotes. Invalid
+// UTF-8 bytes and U+2028/U+2029 are written as six-byte escapes too; counting every byte of 0x80 and
+// above as up to six would overcount real text sixfold, so multi-byte runes count their own length
+// and a lone invalid byte counts six.
+func jsonStringSize(s string) int64 {
+	var n int64
+	for i := 0; i < len(s); {
+		c := s[i]
+		switch {
+		case c == '"' || c == '\\':
+			n += 2
+			i++
+		case c < 0x20 || c == '<' || c == '>' || c == '&':
+			n += 6
+			i++
+		case c < 0x80:
+			n++
+			i++
+		default:
+			r, width := utf8.DecodeRuneInString(s[i:])
+			if r == utf8.RuneError && width == 1 || r == '\u2028' || r == '\u2029' {
+				n += 6
+			} else {
+				n += int64(width)
+			}
+			i += width
+		}
+	}
+	return n
 }

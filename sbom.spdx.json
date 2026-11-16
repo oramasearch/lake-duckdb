@@ -2,17 +2,17 @@
   "spdxVersion": "SPDX-2.3",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "name": "lake-duckdb-29ee5b0d98f1",
-  "documentNamespace": "https://github.com/oramasearch/lake-duckdb/sbom/29ee5b0d98f1006698d8da302127bd22416b3890",
+  "name": "lake-duckdb-7a320be4371d",
+  "documentNamespace": "https://github.com/oramasearch/lake-duckdb/sbom/7a320be4371d27c25fa54238b65e54dc572a242f",
   "creationInfo": {
-    "created": "2026-11-16T04:56:38Z",
+    "created": "2026-11-16T06:07:37Z",
     "creators": [
       "Organization: OramaSearch, Inc.",
       "Tool: tools/sbom.py",
       "Tool: syft"
     ],
     "licenseListVersion": "3.29",
-    "comment": "Made from source commit 29ee5b0d98f1006698d8da302127bd22416b3890 by tools/sbom.py."
+    "comment": "Made from source commit 7a320be4371d27c25fa54238b65e54dc572a242f by tools/sbom.py."
   },
   "documentDescribes": [
     "SPDXRef-DocumentRoot"
@@ -479,8 +479,8 @@
     },
     {
       "name": "golang",
-      "SPDXID": "SPDXRef-Image-golang-d19234e066e4ec6a",
-      "versionInfo": "1.25-bookworm@sha256:3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437",
+      "SPDXID": "SPDXRef-Image-golang-54fea379155a420f",
+      "versionInfo": "1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
       "supplier": "NOASSERTION",
@@ -488,12 +488,12 @@
       "licenseConcluded": "NOASSERTION",
       "licenseDeclared": "NOASSERTION",
       "primaryPackagePurpose": "CONTAINER",
-      "comment": "Container base image (golang:1.25-bookworm@sha256:3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437), FROM in Dockerfile. Its own packages are in the image SBOM of each release image.",
+      "comment": "Container base image (golang:1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea), FROM in Dockerfile. Its own packages are in the image SBOM of each release image.",
       "externalRefs": [
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",
-          "referenceLocator": "pkg:docker/golang@sha256%3A3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437?tag=1.25-bookworm"
+          "referenceLocator": "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?tag=1.27.4-bookworm"
         }
       ]
     },
@@ -668,7 +668,7 @@
     {
       "name": "lake-duckdb",
       "SPDXID": "SPDXRef-DocumentRoot",
-      "versionInfo": "29ee5b0d98f1",
+      "versionInfo": "7a320be4371d",
       "downloadLocation": "git+https://github.com/oramasearch/lake-duckdb.git",
       "homepage": "https://github.com/oramasearch/lake-duckdb",
       "filesAnalyzed": false,
@@ -693,7 +693,7 @@
       "spdxElementId": "SPDXRef-DocumentRoot"
     },
     {
-      "relatedSpdxElement": "SPDXRef-Image-golang-d19234e066e4ec6a",
+      "relatedSpdxElement": "SPDXRef-Image-golang-54fea379155a420f",
       "relationshipType": "DEPENDS_ON",
       "spdxElementId": "SPDXRef-DocumentRoot"
     },
