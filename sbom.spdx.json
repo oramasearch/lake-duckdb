@@ -1,0 +1,816 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "lake-duckdb-bf5f9cffd722",
+  "documentNamespace": "https://github.com/oramasearch/lake-duckdb/sbom/bf5f9cffd7227b00dbace2bb2b34bee2821a24e2",
+  "creationInfo": {
+    "created": "2026-11-16T06:16:30Z",
+    "creators": [
+      "Organization: OramaSearch, Inc.",
+      "Tool: tools/sbom.py",
+      "Tool: syft"
+    ],
+    "licenseListVersion": "3.29",
+    "comment": "Made from source commit bf5f9cffd7227b00dbace2bb2b34bee2821a24e2 by tools/sbom.py."
+  },
+  "documentDescribes": [
+    "SPDXRef-DocumentRoot"
+  ],
+  "packages": [
+    {
+      "name": "gcr.io/distroless/cc-debian12",
+      "SPDXID": "SPDXRef-Image-gcr.io-distroless-cc-debian12-9d56ccee667ae7dc",
+      "versionInfo": "nonroot@sha256:9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "supplier": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "CONTAINER",
+      "comment": "Container base image (gcr.io/distroless/cc-debian12:nonroot@sha256:9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f), FROM in Dockerfile. Its own packages are in the image SBOM of each release image.",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:docker/gcr.io/distroless/cc-debian12@sha256%3A9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f?tag=nonroot"
+        }
+      ]
+    },
+    {
+      "name": "github.com/apache/arrow-go/v18",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-apache-arrow-go-v18-4d93ea328f8a7a61",
+      "versionInfo": "v18.5.1",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:apache:arrow-go\\/v18:v18.5.1:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:apache:arrow_go\\/v18:v18.5.1:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/apache/arrow-go/v18@v18.5.1"
+        }
+      ]
+    },
+    {
+      "name": "github.com/duckdb/duckdb-go-bindings",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-bbef65aa15a91429",
+      "versionInfo": "v0.10505.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb-go-bindings:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb_go_bindings:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/duckdb/duckdb-go-bindings@v0.10505.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/darwin-amd64",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-darwin-amd64-3b2e504f179c7abd",
+      "versionInfo": "v0.10505.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/darwin-amd64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/darwin_amd64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/darwin-amd64@v0.10505.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/darwin-arm64",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-darwin-arm64-a54861f1231bd7e5",
+      "versionInfo": "v0.10505.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/darwin-arm64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/darwin_arm64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/darwin-arm64@v0.10505.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/linux-amd64",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-linux-amd64-c59fd9ff949f7150",
+      "versionInfo": "v0.10505.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/linux-amd64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/linux_amd64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/linux-amd64@v0.10505.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/linux-arm64",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-linux-arm64-d72c661a678a08a7",
+      "versionInfo": "v0.10505.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/linux-arm64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/linux_arm64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/linux-arm64@v0.10505.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/windows-amd64",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-windows-amd64-177ccb9a41d8718e",
+      "versionInfo": "v0.10505.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/windows-amd64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/windows_amd64:v0.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/windows-amd64@v0.10505.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/duckdb/duckdb-go/v2",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-v2-b8681e77b3606a83",
+      "versionInfo": "v2.10505.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb-go\\/v2:v2.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:duckdb:duckdb_go\\/v2:v2.10505.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/duckdb/duckdb-go/v2@v2.10505.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/go-viper/mapstructure/v2",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-go-viper-mapstructure-v2-69e67edfc2286e18",
+      "versionInfo": "v2.5.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:go-viper:mapstructure\\/v2:v2.5.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:go_viper:mapstructure\\/v2:v2.5.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:go:mapstructure\\/v2:v2.5.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/go-viper/mapstructure/v2@v2.5.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/goccy/go-json",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-goccy-go-json-92463fb2dfb99ba1",
+      "versionInfo": "v0.10.5",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:goccy:go-json:v0.10.5:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:goccy:go_json:v0.10.5:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/goccy/go-json@v0.10.5"
+        }
+      ]
+    },
+    {
+      "name": "github.com/google/flatbuffers",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-google-flatbuffers-409e865f95ec2cf4",
+      "versionInfo": "v25.12.19+incompatible",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:google:flatbuffers:v25.12.19\\+incompatible:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/google/flatbuffers@v25.12.19%2Bincompatible"
+        }
+      ]
+    },
+    {
+      "name": "github.com/google/uuid",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-google-uuid-f6424607fde0264b",
+      "versionInfo": "v1.6.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:google:uuid:v1.6.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/google/uuid@v1.6.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/klauspost/compress",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-klauspost-compress-46926630f4726f72",
+      "versionInfo": "v1.18.3",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:klauspost:compress:v1.18.3:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/klauspost/compress@v1.18.3"
+        }
+      ]
+    },
+    {
+      "name": "github.com/klauspost/cpuid/v2",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-klauspost-cpuid-v2-d80cd4af33eaf8e3",
+      "versionInfo": "v2.3.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:klauspost:cpuid\\/v2:v2.3.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/klauspost/cpuid/v2@v2.3.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/pierrec/lz4/v4",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-pierrec-lz4-v4-d9cb593b4ead1044",
+      "versionInfo": "v4.1.25",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:pierrec:lz4\\/v4:v4.1.25:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/pierrec/lz4/v4@v4.1.25"
+        }
+      ]
+    },
+    {
+      "name": "github.com/zeebo/xxh3",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-zeebo-xxh3-115bfbb372ddcda8",
+      "versionInfo": "v1.1.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:zeebo:xxh3:v1.1.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/zeebo/xxh3@v1.1.0"
+        }
+      ]
+    },
+    {
+      "name": "golang",
+      "SPDXID": "SPDXRef-Image-golang-54fea379155a420f",
+      "versionInfo": "1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "supplier": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "CONTAINER",
+      "comment": "Container base image (golang:1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea), FROM in Dockerfile. Its own packages are in the image SBOM of each release image.",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?tag=1.27.4-bookworm"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/exp",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-exp-35832bce83fc6906",
+      "versionInfo": "v0.0.0-20260112195511-716be5621a96",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/exp:v0.0.0-20260112195511-716be5621a96:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/exp@v0.0.0-20260112195511-716be5621a96"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/mod",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-mod-9c2298cf5842e5e7",
+      "versionInfo": "v0.32.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/mod:v0.32.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/mod@v0.32.0"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/sync",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-sync-c736e8765c014c2c",
+      "versionInfo": "v0.19.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/sync:v0.19.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/sync@v0.19.0"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/sys",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-sys-724a509511fab39e",
+      "versionInfo": "v0.40.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/sys:v0.40.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/sys@v0.40.0"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/telemetry",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-telemetry-50ab5c6f8a178723",
+      "versionInfo": "v0.0.0-20260116145544-c6413dc483f5",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/telemetry:v0.0.0-20260116145544-c6413dc483f5:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/telemetry@v0.0.0-20260116145544-c6413dc483f5"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/tools",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-tools-1f50bec63dfbfb8d",
+      "versionInfo": "v0.41.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/tools:v0.41.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/tools@v0.41.0"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/xerrors",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-xerrors-056fc8b658138e7a",
+      "versionInfo": "v0.0.0-20240903120638-7835f813f4da",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /go.mod",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/xerrors:v0.0.0-20240903120638-7835f813f4da:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/xerrors@v0.0.0-20240903120638-7835f813f4da"
+        }
+      ]
+    },
+    {
+      "name": "lake-duckdb",
+      "SPDXID": "SPDXRef-DocumentRoot",
+      "versionInfo": "bf5f9cffd722",
+      "downloadLocation": "git+https://github.com/oramasearch/lake-duckdb.git",
+      "homepage": "https://github.com/oramasearch/lake-duckdb",
+      "filesAnalyzed": false,
+      "supplier": "Organization: OramaSearch, Inc.",
+      "originator": "Organization: OramaSearch, Inc.",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "copyrightText": "Copyright (c) 2026 OramaSearch, Inc.",
+      "primaryPackagePurpose": "SOURCE",
+      "comment": "The source tree of lake-duckdb. Packages found by syft in the files git tracks, plus the C and C++ components of THIRD_PARTY_LICENSES and the git submodules."
+    }
+  ],
+  "relationships": [
+    {
+      "relatedSpdxElement": "SPDXRef-DocumentRoot",
+      "relationshipType": "DESCRIBES",
+      "spdxElementId": "SPDXRef-DOCUMENT"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Image-gcr.io-distroless-cc-debian12-9d56ccee667ae7dc",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Image-golang-54fea379155a420f",
+      "relationshipType": "DEPENDS_ON",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-apache-arrow-go-v18-4d93ea328f8a7a61",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-bbef65aa15a91429",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-darwin-amd64-3b2e504f179c7abd",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-darwin-arm64-a54861f1231bd7e5",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-linux-amd64-c59fd9ff949f7150",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-linux-arm64-d72c661a678a08a7",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-windows-amd64-177ccb9a41d8718e",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-duckdb-duckdb-go-v2-b8681e77b3606a83",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-go-viper-mapstructure-v2-69e67edfc2286e18",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-goccy-go-json-92463fb2dfb99ba1",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-google-flatbuffers-409e865f95ec2cf4",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-google-uuid-f6424607fde0264b",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-klauspost-compress-46926630f4726f72",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-klauspost-cpuid-v2-d80cd4af33eaf8e3",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-pierrec-lz4-v4-d9cb593b4ead1044",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-zeebo-xxh3-115bfbb372ddcda8",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-exp-35832bce83fc6906",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-mod-9c2298cf5842e5e7",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-sync-c736e8765c014c2c",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-sys-724a509511fab39e",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-telemetry-50ab5c6f8a178723",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-tools-1f50bec63dfbfb8d",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    },
+    {
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-xerrors-056fc8b658138e7a",
+      "relationshipType": "CONTAINS",
+      "spdxElementId": "SPDXRef-DocumentRoot"
+    }
+  ]
+}

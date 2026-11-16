@@ -1,7 +1,4 @@
-/*
-Copyright 2026 OramaSearch.
-Licensed under the Apache License, Version 2.0.
-*/
+// SPDX-License-Identifier: MIT
 
 package server
 
@@ -352,6 +349,44 @@ func TestTruncation(t *testing.T) {
 	}
 }
 
+// TestResponseByteCap: the answer stops at MaxResponseBytes of values even under the row cap, and in
+// a batch the cap is shared by every statement. One value larger than the whole cap answers no rows.
+func TestResponseByteCap(t *testing.T) {
+	h := newHarness(t, Config{MaxResponseBytes: 10 << 10})
+	// Each row is a 1,000-character string: ten fit in 10 KiB with the per-value overhead, eleven
+	// do not.
+	status, body := h.query("SELECT repeat('x', 1000) AS v FROM range(100)")
+	if status != http.StatusOK {
+		t.Fatalf("%d %v", status, body)
+	}
+	if rows := body["rows"].([]interface{}); len(rows) != 10 || body["truncated"] != true {
+		t.Fatalf("%d rows, truncated %v; want 10, true", len(rows), body["truncated"])
+	}
+	status, body = h.query("SELECT repeat('x', 20000) AS v")
+	if status != http.StatusOK || len(body["rows"].([]interface{})) != 0 || body["truncated"] != true {
+		t.Fatalf("one value over the cap: %d %v", status, body)
+	}
+	status, body = h.post("/v1/batch", map[string]interface{}{"statements": []interface{}{
+		map[string]interface{}{"sql": "SELECT repeat('x', 1000) AS v FROM range(6)"},
+		map[string]interface{}{"sql": "SELECT repeat('x', 1000) AS v FROM range(6)"},
+	}})
+	if status != http.StatusOK {
+		t.Fatalf("batch: %d %v", status, body)
+	}
+	results := body["results"].([]interface{})
+	first, second := results[0].(map[string]interface{}), results[1].(map[string]interface{})
+	if len(first["rows"].([]interface{})) != 6 || first["truncated"] != nil ||
+		len(second["rows"].([]interface{})) != 4 || second["truncated"] != true {
+		t.Fatalf("batch shares the cap: %v", canonical(t, body))
+	}
+	// The default bounds what the row cap does not: 10,000 rows of 10 KB would be 100 MB.
+	h = newHarness(t, Config{})
+	_, body = h.query("SELECT repeat('x', 10000) AS v FROM range(10000)")
+	if rows := len(body["rows"].([]interface{})); rows >= DefaultMaxRows || body["truncated"] != true {
+		t.Fatalf("default cap: %d rows, truncated %v", rows, body["truncated"])
+	}
+}
+
 func TestHealthz(t *testing.T) {
 	h := newHarness(t, Config{})
 	status, body := h.call(http.MethodGet, "/healthz", "", nil)
@@ -453,5 +488,19 @@ func TestDatabaseIsTheFileAtPath(t *testing.T) {
 	_, body := again.query("SELECT v FROM t")
 	if got := canonical(t, body["rows"]); got != `[[42]]` {
 		t.Fatalf("after reopening: %s", got)
+	}
+}
+
+// TestResponseCapCountsEscapes: a control character is six bytes in JSON, so a string of them
+// takes six times its length from the cap.
+func TestResponseCapCountsEscapes(t *testing.T) {
+	if got := jsonStringSize("a\x01\"<é "); got != 1+6+2+6+2+6 {
+		t.Fatalf("jsonStringSize: %d", got)
+	}
+	h := newHarness(t, Config{MaxResponseBytes: 64 << 10})
+	_, body := h.query("SELECT repeat(chr(1), 1000) AS v FROM range(100)")
+	raw, _ := json.Marshal(body)
+	if len(raw) > 64<<10 || body["truncated"] != true {
+		t.Fatalf("answer of %d bytes, truncated %v", len(raw), body["truncated"])
 	}
 }

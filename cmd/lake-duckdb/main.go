@@ -1,7 +1,4 @@
-/*
-Copyright 2026 OramaSearch.
-Licensed under the Apache License, Version 2.0.
-*/
+// SPDX-License-Identifier: MIT
 
 // lake-duckdb serves one DuckDB database over HTTP for lake's duckdb service kind, powered by
 // DuckDB. The Orama operator runs it as a one-pod StatefulSet per service (orama-operator
@@ -16,6 +13,8 @@ Licensed under the Apache License, Version 2.0.
 //	                          memory_limit is half of it and the Go heap a quarter, leaving a quarter
 //	                          for what neither tracks
 //	LAKE_DUCKDB_THREADS       DuckDB's worker threads (optional; default: the CPU count DuckDB sees)
+//
+// `lake-duckdb --version` prints the version and exits.
 package main
 
 import (
@@ -32,6 +31,7 @@ import (
 	"time"
 
 	"github.com/oramasearch/lake-duckdb/internal/server"
+	"github.com/oramasearch/lake-duckdb/internal/version"
 )
 
 const (
@@ -44,7 +44,16 @@ const (
 )
 
 func main() {
-	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	if len(os.Args) == 2 && os.Args[1] == "--version" {
+		fmt.Println("lake-duckdb", version.Version)
+		return
+	}
+	out, err := detachStdout()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "lake-duckdb:", err)
+		os.Exit(1)
+	}
+	log := slog.New(slog.NewJSONHandler(out, nil))
 	if err := run(log); err != nil {
 		log.Error("lake-duckdb stopped", "err", err.Error())
 		os.Exit(1)
@@ -108,7 +117,7 @@ func run(log *slog.Logger) error {
 	}
 	errs := make(chan error, 1)
 	go func() {
-		log.Info("lake-duckdb listening", "addr", addr, "path", path)
+		log.Info("lake-duckdb listening", "version", version.Version, "addr", addr, "path", path)
 		errs <- httpServer.ListenAndServe()
 	}()
 

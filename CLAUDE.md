@@ -1,11 +1,7 @@
 # CLAUDE.md — lake-duckdb
 
-Org-wide conventions are in [`oramasearch/orama-bridge`](https://github.com/oramasearch/orama-bridge)
-`CLAUDE.md` and apply in full: no AI attribution, merge commits never squash, commit means push,
-private by default, documentation in the same change.
-
 - **What it is:** one Go binary (`cmd/lake-duckdb`) serving one DuckDB database over HTTP
-  (`internal/server`), "powered by DuckDB" — never "DuckDB Cloud". The API contract is lake
+  (`internal/server`), "powered by DuckDB" — never "DuckDB Cloud". The API contract is lake's
   `docs/control-plane/services.md` (the `duckdb` row: the same API as lake-sqlite); what is built is
   [`docs/api.md`](docs/api.md). Change both together.
 - **Language and driver:** Go with `github.com/duckdb/duckdb-go/v2` (MIT; the successor of
@@ -19,8 +15,21 @@ private by default, documentation in the same change.
   Never add an extension, `allowed_directories`, or anything that re-opens file or network access.
 - **Never log** SQL, parameters, bodies or the token.
 - **Build and verify:** `go build ./... && go vet ./... && go test ./...`.
-- **Release:** build `linux/amd64` on the cluster BuildKit (liquid-bridge `.claude/skills/liquid-dev`;
-  cgo cross-compiles poorly, so build on amd64), create the Docker Hub repository **private** before
-  the first push, push `oramasearch/lake-duckdb:<semver>` (an immutable tag), confirm the Docker Hub
-  repository answers 404 anonymously, then bump the operator's default image
-  (`chart/values.yaml` `lakeServices.duckdbImage`, `cmd/main.go` `--lake-duckdb-image`).
+- **Releases:** the version is `internal/version.Version`; each has its notes in
+  [`docs/releases/`](docs/releases/README.md) (`TestReleaseVersionIsDocumented`).
+- **Images** are built for `linux/amd64` on an amd64 host (cgo cross-compiles poorly) and tagged
+  with an immutable semantic version. A new image version is adopted by bumping the operator's
+  default (`chart/values.yaml` `lakeServices.duckdbImage`, `cmd/main.go` `--lake-duckdb-image`).
+
+## Rules
+
+- **Branches:** branch from `dev`, and open every pull request against `dev`. `main` holds the last
+  release. Pull requests are merged with merge commits, never squashed.
+- **Documentation in the same change:** `README.md` and the pages under `docs/` change in the same
+  commit as the code they describe.
+- **No AI attribution** in commits, pull requests, tags or release notes: no `Co-Authored-By`
+  trailers for an assistant, no "Generated with" lines.
+- **Never write the word "seam"**; name the mechanism (interface, extension point, injected
+  dependency, boundary).
+- **No time or size estimates**; report what was done.
+- Report vulnerabilities privately, as `SECURITY.md` describes, never in a public issue.

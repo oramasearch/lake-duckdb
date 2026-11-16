@@ -1,0 +1,625 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:c618a2e1-b450-5505-a71e-c99395d8da96",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-16T06:16:30Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "tools/sbom.py"
+        },
+        {
+          "type": "application",
+          "name": "syft"
+        }
+      ]
+    },
+    "supplier": {
+      "name": "OramaSearch, Inc."
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "pkg:docker/gcr.io/distroless/cc-debian12@sha256%3A9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f?package-id=Image-gcr.io-distroless-cc-debian12-9d56ccee667ae7dc&tag=nonroot",
+      "type": "library",
+      "name": "gcr.io/distroless/cc-debian12",
+      "version": "nonroot@sha256:9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f",
+      "purl": "pkg:docker/gcr.io/distroless/cc-debian12@sha256%3A9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f?tag=nonroot",
+      "properties": [
+        {
+          "name": "syft:package:type",
+          "value": "UnknownPackage"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/apache/arrow-go/v18@v18.5.1?package-id=Package-go-module-github.com-apache-arrow-go-v18-4d93ea328f8a7a61",
+      "type": "library",
+      "name": "github.com/apache/arrow-go/v18",
+      "version": "v18.5.1",
+      "cpe": "cpe:2.3:a:apache:arrow-go\\/v18:v18.5.1:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/apache/arrow-go/v18@v18.5.1",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:apache:arrow_go\\/v18:v18.5.1:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/duckdb/duckdb-go-bindings@v0.10505.0?package-id=Package-go-module-github.com-duckdb-duckdb-go-bindings-bbef65aa15a91429",
+      "type": "library",
+      "name": "github.com/duckdb/duckdb-go-bindings",
+      "version": "v0.10505.0",
+      "cpe": "cpe:2.3:a:duckdb:duckdb-go-bindings:v0.10505.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/duckdb/duckdb-go-bindings@v0.10505.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:duckdb:duckdb_go_bindings:v0.10505.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/darwin-amd64@v0.10505.0?package-id=Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-darwin-amd64-3b2e504f179c7abd",
+      "type": "library",
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/darwin-amd64",
+      "version": "v0.10505.0",
+      "cpe": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/darwin-amd64:v0.10505.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/darwin-amd64@v0.10505.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/darwin_amd64:v0.10505.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/darwin-arm64@v0.10505.0?package-id=Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-darwin-arm64-a54861f1231bd7e5",
+      "type": "library",
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/darwin-arm64",
+      "version": "v0.10505.0",
+      "cpe": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/darwin-arm64:v0.10505.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/darwin-arm64@v0.10505.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/darwin_arm64:v0.10505.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/linux-amd64@v0.10505.0?package-id=Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-linux-amd64-c59fd9ff949f7150",
+      "type": "library",
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/linux-amd64",
+      "version": "v0.10505.0",
+      "cpe": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/linux-amd64:v0.10505.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/linux-amd64@v0.10505.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/linux_amd64:v0.10505.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/linux-arm64@v0.10505.0?package-id=Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-linux-arm64-d72c661a678a08a7",
+      "type": "library",
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/linux-arm64",
+      "version": "v0.10505.0",
+      "cpe": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/linux-arm64:v0.10505.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/linux-arm64@v0.10505.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/linux_arm64:v0.10505.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/windows-amd64@v0.10505.0?package-id=Package-go-module-github.com-duckdb-duckdb-go-bindings-lib-windows-amd64-177ccb9a41d8718e",
+      "type": "library",
+      "name": "github.com/duckdb/duckdb-go-bindings/lib/windows-amd64",
+      "version": "v0.10505.0",
+      "cpe": "cpe:2.3:a:duckdb:duckdb-go-bindings\\/lib\\/windows-amd64:v0.10505.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/duckdb/duckdb-go-bindings/lib/windows-amd64@v0.10505.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:duckdb:duckdb_go_bindings\\/lib\\/windows_amd64:v0.10505.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/duckdb/duckdb-go/v2@v2.10505.0?package-id=Package-go-module-github.com-duckdb-duckdb-go-v2-b8681e77b3606a83",
+      "type": "library",
+      "name": "github.com/duckdb/duckdb-go/v2",
+      "version": "v2.10505.0",
+      "cpe": "cpe:2.3:a:duckdb:duckdb-go\\/v2:v2.10505.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/duckdb/duckdb-go/v2@v2.10505.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:duckdb:duckdb_go\\/v2:v2.10505.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/go-viper/mapstructure/v2@v2.5.0?package-id=Package-go-module-github.com-go-viper-mapstructure-v2-69e67edfc2286e18",
+      "type": "library",
+      "name": "github.com/go-viper/mapstructure/v2",
+      "version": "v2.5.0",
+      "cpe": "cpe:2.3:a:go-viper:mapstructure\\/v2:v2.5.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/go-viper/mapstructure/v2@v2.5.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:go_viper:mapstructure\\/v2:v2.5.0:*:*:*:*:*:*:*"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:go:mapstructure\\/v2:v2.5.0:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/goccy/go-json@v0.10.5?package-id=Package-go-module-github.com-goccy-go-json-92463fb2dfb99ba1",
+      "type": "library",
+      "name": "github.com/goccy/go-json",
+      "version": "v0.10.5",
+      "cpe": "cpe:2.3:a:goccy:go-json:v0.10.5:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/goccy/go-json@v0.10.5",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        },
+        {
+          "name": "syft:cpe23",
+          "value": "cpe:2.3:a:goccy:go_json:v0.10.5:*:*:*:*:*:*:*"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/google/flatbuffers@v25.12.19%2Bincompatible?package-id=Package-go-module-github.com-google-flatbuffers-409e865f95ec2cf4",
+      "type": "library",
+      "name": "github.com/google/flatbuffers",
+      "version": "v25.12.19+incompatible",
+      "cpe": "cpe:2.3:a:google:flatbuffers:v25.12.19\\+incompatible:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/google/flatbuffers@v25.12.19%2Bincompatible",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/google/uuid@v1.6.0?package-id=Package-go-module-github.com-google-uuid-f6424607fde0264b",
+      "type": "library",
+      "name": "github.com/google/uuid",
+      "version": "v1.6.0",
+      "cpe": "cpe:2.3:a:google:uuid:v1.6.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/google/uuid@v1.6.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/klauspost/compress@v1.18.3?package-id=Package-go-module-github.com-klauspost-compress-46926630f4726f72",
+      "type": "library",
+      "name": "github.com/klauspost/compress",
+      "version": "v1.18.3",
+      "cpe": "cpe:2.3:a:klauspost:compress:v1.18.3:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/klauspost/compress@v1.18.3",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/klauspost/cpuid/v2@v2.3.0?package-id=Package-go-module-github.com-klauspost-cpuid-v2-d80cd4af33eaf8e3",
+      "type": "library",
+      "name": "github.com/klauspost/cpuid/v2",
+      "version": "v2.3.0",
+      "cpe": "cpe:2.3:a:klauspost:cpuid\\/v2:v2.3.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/klauspost/cpuid/v2@v2.3.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/pierrec/lz4/v4@v4.1.25?package-id=Package-go-module-github.com-pierrec-lz4-v4-d9cb593b4ead1044",
+      "type": "library",
+      "name": "github.com/pierrec/lz4/v4",
+      "version": "v4.1.25",
+      "cpe": "cpe:2.3:a:pierrec:lz4\\/v4:v4.1.25:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/pierrec/lz4/v4@v4.1.25",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/github.com/zeebo/xxh3@v1.1.0?package-id=Package-go-module-github.com-zeebo-xxh3-115bfbb372ddcda8",
+      "type": "library",
+      "name": "github.com/zeebo/xxh3",
+      "version": "v1.1.0",
+      "cpe": "cpe:2.3:a:zeebo:xxh3:v1.1.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/github.com/zeebo/xxh3@v1.1.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?package-id=Image-golang-54fea379155a420f&tag=1.27.4-bookworm",
+      "type": "library",
+      "name": "golang",
+      "version": "1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea",
+      "purl": "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?tag=1.27.4-bookworm",
+      "properties": [
+        {
+          "name": "syft:package:type",
+          "value": "UnknownPackage"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/exp@v0.0.0-20260112195511-716be5621a96?package-id=Package-go-module-golang.org-x-exp-35832bce83fc6906",
+      "type": "library",
+      "name": "golang.org/x/exp",
+      "version": "v0.0.0-20260112195511-716be5621a96",
+      "cpe": "cpe:2.3:a:golang:x\\/exp:v0.0.0-20260112195511-716be5621a96:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/golang.org/x/exp@v0.0.0-20260112195511-716be5621a96",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/mod@v0.32.0?package-id=Package-go-module-golang.org-x-mod-9c2298cf5842e5e7",
+      "type": "library",
+      "name": "golang.org/x/mod",
+      "version": "v0.32.0",
+      "cpe": "cpe:2.3:a:golang:x\\/mod:v0.32.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/golang.org/x/mod@v0.32.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/sync@v0.19.0?package-id=Package-go-module-golang.org-x-sync-c736e8765c014c2c",
+      "type": "library",
+      "name": "golang.org/x/sync",
+      "version": "v0.19.0",
+      "cpe": "cpe:2.3:a:golang:x\\/sync:v0.19.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/golang.org/x/sync@v0.19.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/sys@v0.40.0?package-id=Package-go-module-golang.org-x-sys-724a509511fab39e",
+      "type": "library",
+      "name": "golang.org/x/sys",
+      "version": "v0.40.0",
+      "cpe": "cpe:2.3:a:golang:x\\/sys:v0.40.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/golang.org/x/sys@v0.40.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/telemetry@v0.0.0-20260116145544-c6413dc483f5?package-id=Package-go-module-golang.org-x-telemetry-50ab5c6f8a178723",
+      "type": "library",
+      "name": "golang.org/x/telemetry",
+      "version": "v0.0.0-20260116145544-c6413dc483f5",
+      "cpe": "cpe:2.3:a:golang:x\\/telemetry:v0.0.0-20260116145544-c6413dc483f5:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/golang.org/x/telemetry@v0.0.0-20260116145544-c6413dc483f5",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/tools@v0.41.0?package-id=Package-go-module-golang.org-x-tools-1f50bec63dfbfb8d",
+      "type": "library",
+      "name": "golang.org/x/tools",
+      "version": "v0.41.0",
+      "cpe": "cpe:2.3:a:golang:x\\/tools:v0.41.0:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/golang.org/x/tools@v0.41.0",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:golang/golang.org/x/xerrors@v0.0.0-20240903120638-7835f813f4da?package-id=Package-go-module-golang.org-x-xerrors-056fc8b658138e7a",
+      "type": "library",
+      "name": "golang.org/x/xerrors",
+      "version": "v0.0.0-20240903120638-7835f813f4da",
+      "cpe": "cpe:2.3:a:golang:x\\/xerrors:v0.0.0-20240903120638-7835f813f4da:*:*:*:*:*:*:*",
+      "purl": "pkg:golang/golang.org/x/xerrors@v0.0.0-20240903120638-7835f813f4da",
+      "properties": [
+        {
+          "name": "syft:package:language",
+          "value": "go"
+        },
+        {
+          "name": "syft:package:type",
+          "value": "go-module"
+        },
+        {
+          "name": "syft:package:metadataType",
+          "value": "go-module-buildinfo-entry"
+        }
+      ]
+    },
+    {
+      "bom-ref": "DocumentRoot",
+      "type": "library",
+      "name": "lake-duckdb",
+      "version": "bf5f9cffd722",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "DocumentRoot",
+      "dependsOn": [
+        "pkg:docker/gcr.io/distroless/cc-debian12@sha256%3A9dac0a79194e45a7da0158a9c6da57b217585af0786db3845d1f0ec1a0dd182f?package-id=Image-gcr.io-distroless-cc-debian12-9d56ccee667ae7dc&tag=nonroot",
+        "pkg:docker/golang@sha256%3A4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea?package-id=Image-golang-54fea379155a420f&tag=1.27.4-bookworm"
+      ]
+    }
+  ]
+}
